@@ -9,7 +9,7 @@ class Usuario extends Model
 {
     use HasFactory;
     protected $table = 'usuarios';
-    public $timestamps = ['fecha_registro', 'fecha_actualizacion'];
+    public $timestamps = ['registro_fecha', 'actualizacion_fecha'];
 
     /**
      * The attributes that are mass assignable.
