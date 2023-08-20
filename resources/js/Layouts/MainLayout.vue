@@ -40,9 +40,11 @@
 		</q-drawer>
 
 		<q-page-container>
-			<main>
-				<slot />
-			</main>
+			<div class="bg-grey-4 d-block height-layout-main">
+				<main>
+					<slot />
+				</main>
+			</div>
 		</q-page-container>
 	</q-layout>
 </template>
@@ -63,3 +65,9 @@ const opcionesConfiguracion = ref([
 const toggleLeftDrawer = () => leftDrawerOpen.value = !leftDrawerOpen.value;
 const toggleRightDrawer = () => rightDrawerOpen.value = !rightDrawerOpen.value;
 </script>
+
+<style scoped>
+.height-layout-main {
+	min-height: calc(100vh - 50px);
+}
+</style>
