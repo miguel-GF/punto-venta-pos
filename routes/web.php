@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\AlumnoController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DocenteController;
+use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +20,10 @@ Route::prefix('docente')->middleware('sys')->group(function () {
 
 Route::middleware('sys')->group(function () {
   Route::get('dashboard', [ViewController::class, 'docenteDashboardView'])->name('dashboard');
+  Route::prefix('productos')->group(function () {
+    Route::get('agregar', [ProductoController::class, 'agregarProductoView'])->name('agregar.productos');
+    Route::post('agregar', [ProductoController::class, 'agregar']);
+  });
 });
 
 // Ruta de fallback para redireccionar a la página de inicio de sesión
