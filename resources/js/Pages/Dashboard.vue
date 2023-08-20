@@ -13,8 +13,12 @@
 
 <script>
 import MainLayout from '../Layouts/MainLayout.vue';
+import { loading } from '../Utils/loading';
 export default {
   props: ["usuario"],
-  components: { MainLayout }
+  components: { MainLayout },
+  mounted() {
+    loading(false);
+  }
 };
 </script>

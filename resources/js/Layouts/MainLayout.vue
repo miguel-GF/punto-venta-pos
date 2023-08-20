@@ -10,7 +10,7 @@
 						<img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
 					</q-avatar>
 					Home-->
-					<Link class="cursor-pointer" as="label" v-if="$page.props.usuario.tipo == 'sistema'"
+					<Link @click="loading(true)" class="cursor-pointer" as="label" v-if="$page.props.usuario.tipo == 'sistema'"
 						href="/dashboard">Home</Link>
 				</q-toolbar-title>
 				<div class="text-left q-pr-sm">
@@ -53,6 +53,7 @@
 import { ref } from "vue";
 import ItemMenu from "../Components/ItemMenu.vue";
 import { Link } from "@inertiajs/inertia-vue3";
+import { loading } from "../Utils/loading";
 const leftDrawerOpen = ref(false);
 const rightDrawerOpen = ref(false);
 const opcionesSistema = ref([
