@@ -12,6 +12,12 @@
       <q-separator />
 
       <q-card-section class="card-body-height scroll">
+        <q-banner v-if="banner" dense :class="obtenerClass" class="rounded-borders q-pa-md q-mb-md">
+          <template v-slot:avatar>
+            <q-icon :name="obtenerIcono" />
+          </template>
+          {{ mensajeBanner || '--' }}
+        </q-banner>
         <div v-html="mensaje"></div>
       </q-card-section>
 
@@ -40,6 +46,44 @@ export default {
       type: String,
       default: 'Mensaje default ...',
     },
+    banner: {
+      type: String,
+      default: '',
+    }
+  },
+  computed: {
+    obtenerClass() {
+      if (this.banner == 'eliminar') {
+        this.mensajeBanner = 'Esta acción es irreversible';
+        return 'bg-red';
+      }
+      else if (this.banner == 'confirmar') {
+        this.mensajeBanner = 'Esta apunto de confirmar la acción';
+        return 'bg-blue-5';
+      }
+      else if (this.banner == 'advertencia') {
+        this.mensajeBanner = 'Esta acción es irreversible';
+        return 'bg-amber-5';
+      }
+      return '';
+    },
+    obtenerIcono() {
+      if (this.banner == 'eliminar') {
+        return 'warning';
+      }
+      if (this.banner == 'confirmar') {
+        return 'info';
+      }
+      if (this.banner == 'advertencia') {
+        return 'warning';
+      }
+      return '';
+    }
+  },
+  data() {
+    return {
+      mensajeBanner: '',
+    }
   },
   methods: {
     cerrar() {
