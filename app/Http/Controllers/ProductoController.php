@@ -114,4 +114,34 @@ class ProductoController extends Controller
 			'producto' => $producto,
 		]);
 	}
+
+	public function eliminar(Request $request, $id)
+	{
+		$request->validate([
+			'fechaActual' => 'required',
+		]);
+
+		$datos = $request->all();
+		$datos['productoId'] = $id;
+
+		$exito = ProductoServiceAction::eliminar($datos);
+		if ($exito) {
+			$status = 200;
+			$mensaje = "Producto eliminado correctamente";
+		} else {
+			$status = 300;
+			$mensaje = "Ocurrio un error al intentar eliminar el producto";
+		}
+
+		$user = Utils::getUser();
+
+		$producto = Producto::where('id', $id)->first();
+
+		return Inertia::render('Productos/EditarProducto', [
+			'usuario' => $user,
+			'status' => $status,
+			'mensaje' => $mensaje,
+			'producto' => $producto,
+		]);
+	}
 }

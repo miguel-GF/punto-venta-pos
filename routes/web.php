@@ -25,6 +25,7 @@ Route::middleware('sys')->group(function () {
     Route::post('agregar', [ProductoController::class, 'agregar']);
     Route::get('editar/{id}', [ProductoController::class, 'editarProductoView'])->name('editar.productos');
     Route::post('editar/{id}', [ProductoController::class, 'editar']);
+    Route::post('eliminar/{id}', [ProductoController::class, 'eliminar']);
   });
 });
 

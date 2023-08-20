@@ -2,6 +2,7 @@
 
 namespace App\Services\Actions;
 
+use App\Constants;
 use App\Models\Producto;
 use App\Utils;
 use Illuminate\Support\Facades\DB;
@@ -76,6 +77,36 @@ class ProductoServiceAction
       $producto->descripcion = $datos['descripcion'];
       $producto->precio = $datos['precio'];
       $producto->existencia = $datos['existencia'];
+      $producto->actualizacion_autor_id = Utils::getUserId();
+      $producto->actualizacion_fecha = $datos['fechaActual'];
+
+      $producto->save();
+
+      DB::commit();
+
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      throw $th;
+    }
+  }
+
+  /**
+   * editar
+   *
+   * @param  mixed $datos [productoId, fechaActual]
+   * @return bool
+   */
+  public static function eliminar(array $datos): bool
+  {
+    try {
+      DB::beginTransaction();
+
+      // Buscar el producto existente por su id
+      $producto = Producto::find($datos['productoId']);
+
+      // Eliminamos el producto
+      $producto->status = Constants::BAJA_STATUS;
       $producto->actualizacion_autor_id = Utils::getUserId();
       $producto->actualizacion_fecha = $datos['fechaActual'];
 
