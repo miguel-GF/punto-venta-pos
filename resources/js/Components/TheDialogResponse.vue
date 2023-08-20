@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="mostrar" persistent>
+  <q-dialog v-model="mostrar" persistent @show="onShow()">
     <q-card class="card-width q-pb-md">
       <q-card-section class="row justify-center">
         <div class="text-h6 ellipsis">{{ titulo }}</div>
@@ -17,7 +17,7 @@
       </q-card-section>
 
       <q-card-actions align="center">
-        <q-btn label="Aceptar" color="primary" @click="aceptar()" />
+        <q-btn ref="btnAceptar" label="Aceptar" color="primary" @click="aceptar()" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -47,6 +47,9 @@ export default {
     aceptar() {
       this.$emit('aceptar');
     },
+    onShow() {
+      this.$refs.btnAceptar.$el.focus();
+    }
   }
 };
 </script>
