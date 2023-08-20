@@ -1,3 +1,15 @@
+.hc-100-50 {
+  height: calc(100vh - 50px);
+}
+
+.hc-100-220 {
+  height: calc(100vh - 220px);
+}
+
+.minh-200 {
+  min-height: 200px;
+}
+
 .w250 {
   width: 250px;
 }
