@@ -129,7 +129,7 @@ return [
 
         'custom_login' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/school-control.log'),
+            'path' => storage_path('logs/punto-venta-pos.log'),
             'level' => 'info', 
         ],
     ],
