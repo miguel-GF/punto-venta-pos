@@ -15,6 +15,6 @@ class Utils
   {
     $session = Session();
     $user = $session->get('user', null);
-    return $user->id;
+    return $user->usuario_id;
   }
 }
