@@ -15,15 +15,7 @@ class ViewController extends Controller
     public function docenteDashboardView()
     {
         $user = Utils::getUser();
-        return Inertia::render('Docentes/DashboardDocente', [
-            'usuario' => $user,
-        ]);
-    }
-
-    public function alumnoDashboardView()
-    {
-        $user = Utils::getUser();
-        return Inertia::render('Alumnos/DashboardAlumno', [
+        return Inertia::render('Dashboard', [
             'usuario' => $user,
         ]);
     }

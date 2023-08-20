@@ -31,12 +31,12 @@ export default {
     redirect() {
       let url;
       switch (this.datos.tag) {
-        case 'calificaciones':
-          url = "/alumno/calificaciones";
+        case 'productos':
+          url = "/productos";
           break;
       
-        case 'cargasAcademicas':
-          url = "/docente/cargasAcademicas";
+        case 'agregarProducto':
+          url = "/productos/agregar";
           break;
 
         default:

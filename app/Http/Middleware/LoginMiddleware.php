@@ -20,10 +20,8 @@ class LoginMiddleware
     {
         $user = Utils::getUser();
         if (Session::has("user")) { 
-            if ($user->tipo == "docente") {
-                return Inertia::location(route("docente.dashboard"));
-            } else if ($user->tipo == "alumno") {
-                return Inertia::location(route("alumno.dashboard"));
+            if ($user->tipo == "sistema") {
+                return Inertia::location(route("dashboard"));
             }
         }
 

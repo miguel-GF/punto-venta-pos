@@ -10,13 +10,11 @@
 						<img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
 					</q-avatar>
 					Home-->
-					<Link class="cursor-pointer" as="label" v-if="$page.props.usuario.tipo == 'alumno'" href="/alumno/dashboard">
-					Home</Link>
-					<Link class="cursor-pointer" as="label" v-else-if="$page.props.usuario.tipo == 'docente'"
-						href="/docente/dashboard">Home</Link>
+					<Link class="cursor-pointer" as="label" v-if="$page.props.usuario.tipo == 'sistema'"
+						href="/dashboard">Home</Link>
 				</q-toolbar-title>
 				<div class="text-left q-pr-sm">
-					{{ $page.props.usuario.nombre || '--' }}
+					{{ `${$page.props.usuario.nombre || '--'} - ${$page.props.usuario.correo || '--'}` }}
 				</div>
 
 				<q-btn dense flat round icon="settings" @click="toggleRightDrawer" />
@@ -25,13 +23,8 @@
 
 		<q-drawer v-model="leftDrawerOpen" side="left" overlay bordered>
 			<q-list bordered>
-				<template v-if="$page.props.usuario.tipo == 'alumno'">
-					<template v-for="(opc, i) in opcionesAlumnos" :key="i">
-						<ItemMenu :datos="opc" />
-					</template>
-				</template>
-				<template v-else-if="$page.props.usuario.tipo == 'docente'">
-					<template v-for="(opc, i) in opcionesDocentes" :key="i">
+				<template v-if="$page.props.usuario.tipo == 'sistema'">
+					<template v-for="(opc, i) in opcionesSistema" :key="i">
 						<ItemMenu :datos="opc" />
 					</template>
 				</template>
@@ -60,11 +53,9 @@ import ItemMenu from "../Components/ItemMenu.vue";
 import { Link } from "@inertiajs/inertia-vue3";
 const leftDrawerOpen = ref(false);
 const rightDrawerOpen = ref(false);
-const opcionesAlumnos = ref([
-	{ label: "Calificaciones", tag: "calificaciones", icon: "list" },
-]);
-const opcionesDocentes = ref([
-	{ label: "Cargas Académicas", tag: "cargasAcademicas", icon: "person" },
+const opcionesSistema = ref([
+	{ label: "Productos", tag: "productos", icon: "person" },
+	{ label: "Agregar Producto", tag: "agregarProducto", icon: "person" },
 ]);
 const opcionesConfiguracion = ref([
 	{ label: "Cerrar Sesión", tag: "cerrarSesion", icon: "logout" },

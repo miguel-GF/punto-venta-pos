@@ -5,11 +5,10 @@ namespace App\Http\Middleware;
 use App\Utils;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
-class DocenteMiddleware
+class SistemaMiddleware
 {
     /**
      * Handle an incoming request.
@@ -20,10 +19,8 @@ class DocenteMiddleware
     {
         $user = Utils::getUser();
         if (!is_null($user)) {
-            if ($user->tipo == "docente") {
+            if ($user->tipo == "sistema") {
                 return $next($request);
-            } else if ($user->tipo == "alumno") {
-                return Inertia::location(route('alumno.dashboard'));
             }
         }
 

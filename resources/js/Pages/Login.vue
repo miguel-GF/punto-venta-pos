@@ -14,71 +14,21 @@
               align="justify"
               narrow-indicator
             >
-              <q-tab name="alumnos" label="Alumnos" @click="guardarTipo('alumno'), limpiarDatos()"/>
-              <q-tab name="docentes" label="Docentes" @click="guardarTipo('docente', limpiarDatos())" />
+              <q-tab name="sistema" label="Sistema Ventas" @click="guardarTipo('sistema', limpiarDatos())" />
             </q-tabs>
   
             <q-separator />
   
             <q-tab-panels v-model="tab" animated>
-              <q-tab-panel name="alumnos">
-                <div class="text-h5 text-center">Alumnos</div>
-                <q-form @submit.prevent="submitForm()" class="bg-white shadow-md rounded q-pa-md">
-                  <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="numeroEstudiante">
-                      Número de Estudiante
-                    </label>
-                    <q-input
-                      v-model.number="form.usuario"
-                      id="numeroEstudiante"
-                      dense
-                      outlined
-                      autofocus
-                      :rules="[
-                        val => !!val || 'Numero de estudiante es obligatorio',
-                        val => Number.isInteger(val) || 'Debe ser un número válido',
-                      ]"
-                    />
-                  </div>
-                  <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="passwordAlumno">
-                      Password
-                    </label>
-                    <q-input
-                      v-model.trim="form.password"
-                      type="password"
-                      id="passwordAlumno"
-                      dense
-                      outlined
-                      :rules="[val => !!val || 'Password es obligatorio',]"
-                    />
-                  </div>  
-                  <div class="text-center q-mt-md">
-                    <q-btn
-                      color="primary"
-                      type="submit"
-                      v-if="!mostrarSpinner"
-                    >
-                      Iniciar Sesión
-                    </q-btn>
-                    <q-spinner-oval
-                      v-else
-                      color="primary"
-                      size="2em"
-                    />
-                  </div>
-                </q-form>
-              </q-tab-panel>
-  
-              <q-tab-panel name="docentes">
-                <div class="text-h5 text-center">Docentes</div>
+              <q-tab-panel name="sistema">
+                <div class="text-h5 text-center">Acceso al Sistema</div>
                 <q-form @submit.prevent="submitForm()" class="bg-white shadow-md rounded q-pa-md">
                   <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
                       Email
                     </label>
                     <q-input
-                      v-model.trim="form.usuario"
+                      v-model.trim="form.correo"
                       type="email"
                       id="email"
                       dense
@@ -136,11 +86,11 @@ export default {
   data() {
     return {
       form: {
-        usuario: "",
+        correo: "",
         password: "",
         tipo: "alumno"
       },
-      tab: "alumnos",
+      tab: "sistema",
       mostrarSpinner: false,
     };
   },
@@ -160,18 +110,10 @@ export default {
       try {
         
         this.mostrarSpinner = true;
-        if (this.form.tipo == 'alumno') {
-          form = {
-            numeroEstudiante: this.form.usuario,
-            password: this.form.password,
-            tipo: "alumno"
-          }
-        } else {
-          form = {
-            correo: this.form.usuario,
-            password: this.form.password,
-            tipo: "docente"
-          }
+        form = {
+          correo: this.form.correo,
+          password: this.form.password,
+          tipo: "sistema"
         }
         this.$inertia.post("/login", form);
       } catch (error) {
@@ -182,7 +124,7 @@ export default {
       this.form.tipo = tipo;
     },
     limpiarDatos() {
-      this.form.usuario = "";
+      this.form.correo = "";
       this.form.password = "";
     },
     showNotif (message, tipo) {

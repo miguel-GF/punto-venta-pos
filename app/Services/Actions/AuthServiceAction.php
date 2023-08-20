@@ -1,60 +1,33 @@
 <?php
 
 namespace App\Services\Actions;
+
 use App\Constants;
-use App\Models\Alumno;
-use App\Models\User;
+use App\Models\Usuario;
 
 class AuthServiceAction
-{    
-    /**
-     * loginDocente
-     *
-     * @param  mixed $datos [correo, password]
-     * @return bool
-     */
-    public static function loginDocente(array $datos)
-    {
-      // $credentials = $request->only('correo', 'password');
-      // if (Auth::attempt($credentials)) {
-      //     return redirect()->route('user.dashboard');
-      // }
-      $user = User::select('idusuarios', 'correo', 'claveusuario', 'nombre')
-        ->where('correo', $datos['correo'])
-        ->where('password', $datos['password'])
-        ->where('status', Constants::ACTIVO_STATUS)
-        ->get()->first();
-      
-      if (!empty($user)) {
-        $session = Session();
-        $user->tipo = "docente";
-        $session->put('user', $user);
-        return true;
-      } else {
-        return false;
-      }
-    }
+{
+  /**
+   * loginDocente
+   *
+   * @param  mixed $datos [correo, password]
+   * @return bool
+   */
+  public static function login(array $datos)
+  {
+    $user = Usuario::select('id', 'nombre', 'correo')
+      ->where('correo', $datos['correo'])
+      ->where('password', md5($datos['password']))
+      ->whereRaw("LOWER(status) = ?", [strtolower(Constants::ACTIVO_STATUS)])
+      ->get()->first();
 
-    /**
-     * loginAlumno
-     *
-     * @param  mixed $datos [numeroEstudiante, password]
-     * @return bool
-     */
-    public static function loginAlumno(array $datos)
-    {
-      $user = Alumno::select('idalumnos', 'numestudiante', 'nombre')
-        ->where('numestudiante', $datos['numeroEstudiante'])
-        ->where('contrasena', $datos['password'])
-        ->get()->first();
-      
-      if (!empty($user)) {
-        $session = Session();
-        $user->tipo = "alumno";
-        $session->put('user', $user);
-        return true;
-      } else {
-        return false;
-      }
+    if (!empty($user)) {
+      $session = Session();
+      $user->tipo = "sistema";
+      $session->put('user', $user);
+      return true;
+    } else {
+      return false;
     }
+  }
 }

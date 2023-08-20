@@ -11,14 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('usuarios', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('nombre');
+            $table->string('correo')->unique();
             $table->string('password');
-            $table->rememberToken();
+            $table->string('status')->default('Activo');
+            $table->boolean('mostrar')->default(true);
+            $table->integer('registro_autor_id')->nullable();
+            $table->integer('actualizacion_autor_id')->nullable();
             $table->timestamps();
+
+             // Cambiar nombres de campos de fecha
+             $table->renameColumn('created_at', 'fecha_registro');
+             $table->renameColumn('updated_at', 'fecha_actualizacion');
         });
     }
 
@@ -27,6 +33,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::table('usuarios', function (Blueprint $table) {
+            // Cambiar los nombres de nuevo en la migración de rollback
+            $table->renameColumn('fecha_registro', 'created_at');
+            $table->renameColumn('fecha_actualizacion', 'updated_at');
+        });
+        Schema::dropIfExists('usuarios');
     }
 };

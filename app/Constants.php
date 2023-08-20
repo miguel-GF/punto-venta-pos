@@ -4,6 +4,7 @@ namespace App;
 
 class Constants
 {
-  const ACTIVO_STATUS = "ACTIVO";
-  const BAJA_STATUS = "BAJA";
+  const PENDIENTE_STATUS = "Pendiente";
+  const ACTIVO_STATUS = "Activo";
+  const BAJA_STATUS = "Baja";
 }
