@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('usuarios', function (Blueprint $table) {
+        Schema::create('productos', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->string('correo')->unique();
-            $table->string('password');
+            $table->string('clave', 15);
+            $table->string('codigo_barras', 30);
+            $table->string('nombre', 120);
+            $table->text('descripcion');
+            $table->double('precio');
+            $table->double('existencia');
             $table->string('status')->default('Activo');
-            $table->boolean('mostrar')->default(true);
-            $table->integer('registro_autor_id')->nullable();
+            $table->integer('registro_autor_id');
             $table->integer('actualizacion_autor_id')->nullable();
             $table->timestamps();
 
@@ -33,11 +35,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('usuarios', function (Blueprint $table) {
+        Schema::table('productos', function (Blueprint $table) {
             // Cambiar los nombres de nuevo en la migración de rollback
             $table->renameColumn('registro_fecha', 'created_at');
             $table->renameColumn('actualizacion_fecha', 'updated_at');
         });
-        Schema::dropIfExists('usuarios');
+        Schema::dropIfExists('productos');
     }
 };
