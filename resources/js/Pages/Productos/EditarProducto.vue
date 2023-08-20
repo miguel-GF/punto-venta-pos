@@ -3,7 +3,7 @@
     <div class="q-pa-md hc-100-50">
       <q-card class="q-pa-md full-height overflow-hidden">
         <div class="row col-12 justify-between q-mb-md">
-          <div class="text-h4">Agregar Nuevo Producto</div>
+          <div class="text-h4">Editar Producto</div>
           <div class="q-my-auto">
             <q-btn @click="regresar()" dense icon-right="chevron_left" color="secondary"
               class="q-mr-md"
@@ -159,7 +159,8 @@ import { loading } from '../../Utils/loading';
 import { notify } from '../../Utils/notify';
 import { obtenerFechaHoraActualOperacion } from '../../Utils/date';
 export default {
-  props: ["status", "mensaje"],
+  name: "EditarProducto",
+  props: ["producto", "status", "mensaje"],
   components: { MainLayout },
   data() {
     return {
@@ -176,38 +177,46 @@ export default {
     }
   },
   created() {
+    console.log(this.producto);
+    if (this.producto && !this.status) {
+      this.llenarDatosForm();
+    }
     loading(false);
   },
   updated() {
     loading(false);
     if (this.status == 200) {
       this.mostrarModalExito = true;
+      this.llenarDatosForm();
     } else if (this.status == 300) {
       notify(this.mensaje, 'error');
     }
   },
   methods: {
+    llenarDatosForm() {
+      const { clave, codigo_barras, nombre, descripcion, precio, existencia } = this.producto;
+      this.form = {
+        clave,
+        codigoBarras: codigo_barras,
+        nombre,
+        descripcion,
+        precio,
+        existencia,
+      }
+    },
     regresar() {
       loading(true);
       this.$inertia.get('/productos');
     },
     guardar() {
-      loading(true, 'Agregando ...');
+      loading(true, 'Editando ...');
       const form = {
         ...this.form,
         fechaActual: obtenerFechaHoraActualOperacion(),
       };
-      this.$inertia.post("/productos/agregar", form);
+      this.$inertia.post("/productos/editar/" + this.producto.id, form);
     },
     limpiar() {
-      this.form = {
-        clave: "",
-        codigoBarras: "",
-        nombre: "",
-        descripcion: "",
-        precio: "",
-        existencia: "",
-      };
       this.$nextTick(() => {
         this.$refs.claveInput.focus();
         this.$refs.form.resetValidation();

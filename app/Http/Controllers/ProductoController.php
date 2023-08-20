@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Producto;
 use App\Services\Actions\ProductoServiceAction;
 use App\Services\Data\DocenteServiceData;
 use App\Utils;
@@ -15,6 +16,16 @@ class ProductoController extends Controller
 		$user = Utils::getUser();
 		return Inertia::render('Productos/AgregarProducto', [
 			'usuario' => $user,
+		]);
+	}
+
+	public function editarProductoView($id)
+	{
+		$user = Utils::getUser();
+		$producto = Producto::where('id', $id)->first();
+		return Inertia::render('Productos/EditarProducto', [
+			'usuario' => $user,
+			'producto' => $producto,
 		]);
 	}
 
@@ -65,6 +76,42 @@ class ProductoController extends Controller
 			'usuario' => $user,
 			'status' => $status,
 			'mensaje' => $mensaje,
+		]);
+	}
+
+	public function editar(Request $request, $id)
+	{
+		$request->validate([
+			'clave' => 'required',
+			'codigoBarras' => 'required',
+			'nombre' => 'required',
+			'descripcion' => 'required',
+			'precio' => 'required|numeric',
+			'existencia' => 'required|numeric',
+			'fechaActual' => 'required',
+		]);
+
+		$datos = $request->all();
+		$datos['productoId'] = $id;
+
+		$exito = ProductoServiceAction::editar($datos);
+		if ($exito) {
+			$status = 200;
+			$mensaje = "Producto editado correctamente";
+		} else {
+			$status = 300;
+			$mensaje = "La clave del producto ya existe, favor de verificar";
+		}
+
+		$user = Utils::getUser();
+
+		$producto = Producto::where('id', $id)->first();
+
+		return Inertia::render('Productos/EditarProducto', [
+			'usuario' => $user,
+			'status' => $status,
+			'mensaje' => $mensaje,
+			'producto' => $producto,
 		]);
 	}
 }

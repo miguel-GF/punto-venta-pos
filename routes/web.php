@@ -23,6 +23,8 @@ Route::middleware('sys')->group(function () {
   Route::prefix('productos')->group(function () {
     Route::get('agregar', [ProductoController::class, 'agregarProductoView'])->name('agregar.productos');
     Route::post('agregar', [ProductoController::class, 'agregar']);
+    Route::get('editar/{id}', [ProductoController::class, 'editarProductoView'])->name('editar.productos');
+    Route::post('editar/{id}', [ProductoController::class, 'editar']);
   });
 });
 
