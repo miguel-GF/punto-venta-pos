@@ -9,6 +9,7 @@ class Usuario extends Model
 {
     use HasFactory;
     protected $table = 'usuarios';
+    protected $primaryKey = 'usuario_id';
     public $timestamps = ['registro_fecha', 'actualizacion_fecha'];
 
     /**
