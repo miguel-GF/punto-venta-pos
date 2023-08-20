@@ -61,7 +61,7 @@ class ProductoServiceAction
     try {
       DB::beginTransaction();
 
-      $existe = Producto::where('clave', $datos['clave'])->where('id', '<>', $datos['productoId']) ->exists();
+      $existe = Producto::where('clave', $datos['clave'])->where('producto_id', '<>', $datos['productoId']) ->exists();
 
       if ($existe) {
         return false;

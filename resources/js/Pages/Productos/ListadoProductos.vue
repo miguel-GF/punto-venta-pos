@@ -150,12 +150,12 @@ export default {
       loading(true);
       this.$inertia.get('/productos/agregar');
     },
-    irEditar({ id }) {
+    irEditar({ producto_id }) {
       loading(true);
-      this.$inertia.get('/productos/editar/' + id);
+      this.$inertia.get('/productos/editar/' + producto_id);
     },
-    confirmarEliminar({ id, clave, nombre }) {
-      this.productoEliminarId = id;
+    confirmarEliminar({ producto_id, clave, nombre }) {
+      this.productoEliminarId = producto_id;
       this.mensajeConfirmacion = `¿Está seguro de eliminar el producto ${clave} - ${nombre}?`;
       this.mostrarModalConfirmar = true;
     },

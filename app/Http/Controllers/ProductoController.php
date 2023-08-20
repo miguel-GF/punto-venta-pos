@@ -7,19 +7,35 @@ use App\Models\Producto;
 use App\Services\Actions\ProductoServiceAction;
 use App\Services\Data\DocenteServiceData;
 use App\Utils;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Throwable;
 
 class ProductoController extends Controller
 {
 	public function productosView()
 	{
-		$user = Utils::getUser();
-		$productos = Producto::all()->where('status', Constants::ACTIVO_STATUS);
-		return Inertia::render('Productos/ListadoProductos', [
-			'usuario' => $user,
-			'productos' => $productos,
-		]);
+		try {
+			$user = Utils::getUser();
+			$productos = DB::table('productos')
+				->whereRaw("LOWER(status) = ?", [strtolower(Constants::ACTIVO_STATUS)])
+				->get()
+				->toArray();
+
+			return Inertia::render('Productos/ListadoProductos', [
+				'usuario' => $user,
+				'productos' => $productos,
+			]);
+		} catch (QueryException $qe) {
+			Log::error($qe);
+			throw $qe;
+		} catch (Throwable $th) {
+			Log::error($th);
+			throw $th;
+		}
 	}
 	public function agregarProductoView()
 	{
@@ -32,7 +48,7 @@ class ProductoController extends Controller
 	public function editarProductoView($id)
 	{
 		$user = Utils::getUser();
-		$producto = Producto::where('id', $id)->first();
+		$producto = Producto::where('producto_id', $id)->first();
 		return Inertia::render('Productos/EditarProducto', [
 			'usuario' => $user,
 			'producto' => $producto,
@@ -115,7 +131,7 @@ class ProductoController extends Controller
 
 		$user = Utils::getUser();
 
-		$producto = Producto::where('id', $id)->first();
+		$producto = Producto::where('producto_id', $id)->first();
 
 		return Inertia::render('Productos/EditarProducto', [
 			'usuario' => $user,
@@ -144,7 +160,10 @@ class ProductoController extends Controller
 		}
 
 		$user = Utils::getUser();
-		$productos = Producto::all()->where('status', Constants::ACTIVO_STATUS);
+		$productos = DB::table('productos')
+				->whereRaw("LOWER(status) = ?", [strtolower(Constants::ACTIVO_STATUS)])
+				->get()
+				->toArray();
 
 		return Inertia::render('Productos/ListadoProductos', [
 			'usuario' => $user,

@@ -15,7 +15,7 @@ class AuthServiceAction
    */
   public static function login(array $datos)
   {
-    $user = Usuario::select('id', 'nombre', 'correo')
+    $user = Usuario::select('usuario_id', 'nombre', 'correo')
       ->where('correo', $datos['correo'])
       ->where('password', md5($datos['password']))
       ->whereRaw("LOWER(status) = ?", [strtolower(Constants::ACTIVO_STATUS)])

@@ -214,7 +214,7 @@ export default {
         ...this.form,
         fechaActual: obtenerFechaHoraActualOperacion(),
       };
-      this.$inertia.post("/productos/editar/" + this.producto.id, form);
+      this.$inertia.post("/productos/editar/" + this.producto.producto_id, form);
     },
     limpiar() {
       this.$nextTick(() => {
