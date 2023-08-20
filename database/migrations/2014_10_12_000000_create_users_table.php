@@ -12,14 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('usuarios', function (Blueprint $table) {
-            $table->id();
+            $table->id('usuario_id');
             $table->string('nombre');
             $table->string('correo')->unique();
             $table->string('password');
             $table->string('status')->default('Activo');
             $table->boolean('mostrar')->default(true);
-            $table->integer('registro_autor_id')->nullable();
-            $table->integer('actualizacion_autor_id')->nullable();
+            $table->unsignedBigInteger('registro_autor_id')->nullable();
+            $table->unsignedBigInteger('actualizacion_autor_id')->nullable();
+            $table->foreign('registro_autor_id')->references('usuario_id')->on('usuarios');
+            $table->foreign('actualizacion_autor_id')->references('usuario_id')->on('usuarios');
             $table->timestamps();
 
              // Cambiar nombres de campos de fecha
