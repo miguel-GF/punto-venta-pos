@@ -170,14 +170,6 @@ export default {
       loading(true);
       this.$inertia.get('/docente/cargasAcademicas');
     },
-    fechaActual() {
-      let fecha = new Date();
-      // let opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
-      let opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-      let fechaFormateada = fecha.toLocaleDateString('es-MX', opciones);
-      console.log(fechaFormateada);
-      return fechaFormateada;
-    }
   }
 };
 </script>

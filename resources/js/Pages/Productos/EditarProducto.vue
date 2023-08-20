@@ -177,9 +177,9 @@ export default {
     }
   },
   created() {
-    console.log(this.producto);
     if (this.producto && !this.status) {
       this.llenarDatosForm();
+      this.$nextTick(() => this.$refs.claveInput.focus());
     }
     loading(false);
   },

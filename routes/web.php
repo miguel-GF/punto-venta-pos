@@ -21,6 +21,7 @@ Route::prefix('docente')->middleware('sys')->group(function () {
 Route::middleware('sys')->group(function () {
   Route::get('dashboard', [ViewController::class, 'docenteDashboardView'])->name('dashboard');
   Route::prefix('productos')->group(function () {
+    Route::get('/', [ProductoController::class, 'productosView'])->name('productos');
     Route::get('agregar', [ProductoController::class, 'agregarProductoView'])->name('agregar.productos');
     Route::post('agregar', [ProductoController::class, 'agregar']);
     Route::get('editar/{id}', [ProductoController::class, 'editarProductoView'])->name('editar.productos');

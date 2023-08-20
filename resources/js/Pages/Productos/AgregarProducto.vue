@@ -177,6 +177,7 @@ export default {
   },
   created() {
     loading(false);
+    this.$nextTick(() => this.$refs.claveInput.focus());
   },
   updated() {
     loading(false);

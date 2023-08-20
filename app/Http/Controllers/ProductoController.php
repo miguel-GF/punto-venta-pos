@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants;
 use App\Models\Producto;
 use App\Services\Actions\ProductoServiceAction;
 use App\Services\Data\DocenteServiceData;
@@ -11,6 +12,15 @@ use Inertia\Inertia;
 
 class ProductoController extends Controller
 {
+	public function productosView()
+	{
+		$user = Utils::getUser();
+		$productos = Producto::all()->where('status', Constants::ACTIVO_STATUS);
+		return Inertia::render('Productos/ListadoProductos', [
+			'usuario' => $user,
+			'productos' => $productos,
+		]);
+	}
 	public function agregarProductoView()
 	{
 		$user = Utils::getUser();
@@ -134,14 +144,13 @@ class ProductoController extends Controller
 		}
 
 		$user = Utils::getUser();
+		$productos = Producto::all()->where('status', Constants::ACTIVO_STATUS);
 
-		$producto = Producto::where('id', $id)->first();
-
-		return Inertia::render('Productos/EditarProducto', [
+		return Inertia::render('Productos/ListadoProductos', [
 			'usuario' => $user,
+			'productos' => $productos,
 			'status' => $status,
 			'mensaje' => $mensaje,
-			'producto' => $producto,
 		]);
 	}
 }
