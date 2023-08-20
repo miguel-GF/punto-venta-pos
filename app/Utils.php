@@ -10,4 +10,11 @@ class Utils
     $user = $session->get('user', null);
     return $user;
   }
+
+  public static function getUserId()
+  {
+    $session = Session();
+    $user = $session->get('user', null);
+    return $user->id;
+  }
 }
