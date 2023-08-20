@@ -10,7 +10,7 @@
             >
               <div class="q-px-sm">Regresar</div>
             </q-btn>
-            <q-btn @click="$refs.inputSubmit.click()" dense icon-right="save" color="primary">
+            <q-btn @click="$refs.inputSubmit.click()" dense icon-right="las la-save" color="primary">
               <div class="q-px-sm">Guardar</div>
             </q-btn>
           </div>
@@ -133,7 +133,7 @@
               </div>
               <!-- BTN GUARDAR -->
               <div class="text-right col-8">
-                <q-btn type="submit" icon-right="save" color="primary" class="full-width">
+                <q-btn type="submit" icon-right="las la-save" color="primary" class="full-width">
                   <div class="q-px-sm">Guardar</div>
                 </q-btn>
               </div>

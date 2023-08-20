@@ -3,7 +3,7 @@
 	<q-layout>
 		<q-header reveal elevated class="bg-primary text-white">
 			<q-toolbar>
-				<q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+				<q-btn dense flat round icon="las la-bars" @click="toggleLeftDrawer" />
 
 				<q-toolbar-title>
 					<!-- <q-avatar>
@@ -17,7 +17,7 @@
 					{{ `${$page.props.usuario.nombre || '--'} - ${$page.props.usuario.correo || '--'}` }}
 				</div>
 
-				<q-btn dense flat round icon="settings" @click="toggleRightDrawer" />
+				<q-btn dense flat round icon="las la-cog" @click="toggleRightDrawer" />
 			</q-toolbar>
 		</q-header>
 
@@ -57,11 +57,13 @@ import { loading } from "../Utils/loading";
 const leftDrawerOpen = ref(false);
 const rightDrawerOpen = ref(false);
 const opcionesSistema = ref([
-	{ label: "Productos", tag: "productos", icon: "person" },
-	{ label: "Agregar Producto", tag: "agregarProducto", icon: "person" },
+	{ label: "Productos", tag: "productos", icon: "las la-tags" },
+	{ label: "Agregar Producto", tag: "agregarProducto", icon: "las la-plus" },
+	{ label: "Clientes", tag: "clientes", icon: "las la-user" },
+	{ label: "Agregar Cliente", tag: "agregarCliente", icon: "las la-user-plus" },
 ]);
 const opcionesConfiguracion = ref([
-	{ label: "Cerrar Sesión", tag: "cerrarSesion", icon: "logout" },
+	{ label: "Cerrar Sesión", tag: "cerrarSesion", icon: "las la-sign-out-alt" },
 ]);
 const toggleLeftDrawer = () => leftDrawerOpen.value = !leftDrawerOpen.value;
 const toggleRightDrawer = () => rightDrawerOpen.value = !rightDrawerOpen.value;
