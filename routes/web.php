@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ViewController;
@@ -20,6 +21,7 @@ Route::prefix('docente')->middleware('sys')->group(function () {
 
 Route::middleware('sys')->group(function () {
   Route::get('dashboard', [ViewController::class, 'docenteDashboardView'])->name('dashboard');
+  // PRODUCTOS
   Route::prefix('productos')->group(function () {
     Route::get('/', [ProductoController::class, 'productosView'])->name('productos');
     Route::get('agregar', [ProductoController::class, 'agregarProductoView'])->name('agregar.productos');
@@ -27,6 +29,15 @@ Route::middleware('sys')->group(function () {
     Route::get('editar/{id}', [ProductoController::class, 'editarProductoView'])->name('editar.productos');
     Route::post('editar/{id}', [ProductoController::class, 'editar']);
     Route::post('eliminar/{id}', [ProductoController::class, 'eliminar']);
+  });
+  // CLIENTES
+  Route::prefix('clientes')->group(function () {
+    Route::get('/', [ClienteController::class, 'clientesView'])->name('clientes');
+    Route::get('agregar', [ClienteController::class, 'agregarClienteView'])->name('agregar.clientes');
+    Route::post('agregar', [ClienteController::class, 'agregar']);
+    Route::get('editar/{id}', [ClienteController::class, 'editarClienteView'])->name('editar.clientes');
+    Route::post('editar/{id}', [ClienteController::class, 'editar']);
+    Route::post('eliminar/{id}', [ClienteController::class, 'eliminar']);
   });
 });
 

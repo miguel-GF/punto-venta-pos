@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Constants;
 use App\Models\Producto;
 use App\Services\Actions\ProductoServiceAction;
-use App\Services\Data\DocenteServiceData;
 use App\Utils;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -52,24 +51,6 @@ class ProductoController extends Controller
 		return Inertia::render('Productos/EditarProducto', [
 			'usuario' => $user,
 			'producto' => $producto,
-		]);
-	}
-
-	/**
-	 * docentePasarAsistenciaCargasAcademicasView
-	 *
-	 * @param  mixed $request
-	 */
-	public function docentePasarAsistenciasCargasAcademicasView($claveMateria)
-	{
-		$user = Utils::getUser();
-		$cargasAcademicasAlumnos = DocenteServiceData::obtenerAlumnosPorCargaAcademica([
-			'idProf' => $user->idusuarios,
-			'claveMateria' => $claveMateria
-		]);
-		return Inertia::render('Docentes/DocentePasarAsistencia', [
-			'alumnos' => $cargasAcademicasAlumnos,
-			'usuario' => $user,
 		]);
 	}
 
