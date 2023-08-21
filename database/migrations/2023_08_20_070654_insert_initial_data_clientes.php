@@ -15,7 +15,7 @@ return new class extends Migration
                 'nombre_comercial' => 'Público en General',
                 'razon_social' => 'PUBLICO EN GENERAL',
                 'rfc' => 'XAXX010101000',
-                'tipo_persona' => 'fisica',
+                'tipo_persona' => 'Fisica',
                 'publico_general' => true,
                 'codigo_postal' => '72000',
                 'cfdi_clave' => 'G03',

@@ -18,9 +18,11 @@ return new class extends Migration
             $table->text('eslogan')->nullable();
             $table->string('correo')->nullable();
             $table->boolean('publico_general')->default(false);
+            $table->string('status', 12)->default('Activo');
             // Datos fiscales
             $table->string('tipo_persona', 6)->nullable();
-            $table->string('pais', 30)->nullable();
+            $table->string('pais', 30)->nullable()->default('México');
+            $table->string('pais_clave', 5)->nullable()->default('MEX');
             $table->string('razon_social', 230)->nullable();
             $table->string('rfc', 15)->nullable();
             $table->string('codigo_postal', 5)->nullable();
