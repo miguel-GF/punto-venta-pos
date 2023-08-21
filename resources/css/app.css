@@ -40,6 +40,10 @@ LISTADO CON HEADER PARA HEIGHT CORRECTO */
   min-height: 600px;
 }
 
+.fs-italic {
+  font-style: italic;
+}
+
 /* ***************************************** */
 /* ESTILOS PARA TABLA PARA QUE SE VEA 
 /* TIPO STRIPED Y CAMBIE EL COLOR DEL HEADER */
