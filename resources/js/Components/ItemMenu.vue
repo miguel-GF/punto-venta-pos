@@ -1,8 +1,9 @@
 <template>
-  <q-item clickable v-ripple @click="onClick()">
-    <q-item-section>{{ datos.label || '--' }}</q-item-section>
+  <q-item-label class="bg-grey-2" header>{{ datos.seccion || '--' }}</q-item-label>
+  <q-item v-for="(opc, i) in datos.opciones" clickable v-ripple @click="onClick(opc)" :key="i">
+    <q-item-section>{{ opc.label || '--' }}</q-item-section>
     <q-item-section avatar>
-      <q-icon color="secondary" :name="datos.icon" />
+      <q-icon color="secondary" :name="opc.icon" />
     </q-item-section>
   </q-item>
 </template>
@@ -17,26 +18,34 @@ export default {
     }
   },
   methods: {
-    onClick() {
+    onClick(opcion) {
       loading(true, 'Cargando ...')
-      if (this.datos.tag == 'cerrarSesion') {
+      if (opcion.tag == 'cerrarSesion') {
         this.logout();
       } else {
-        this.redirect();
+        this.redirect(opcion);
       }
     },
     logout() {
       this.$inertia.post("/logout");
     },
-    redirect() {
+    redirect(opcion) {
       let url;
-      switch (this.datos.tag) {
+      switch (opcion.tag) {
         case 'productos':
           url = "/productos";
           break;
       
         case 'agregarProducto':
           url = "/productos/agregar";
+          break;
+        
+        case 'clientes':
+          url = "/clientes";
+          break;
+
+        case 'agregarCliente':
+          url = "/clientes/agregar";
           break;
 
         default:

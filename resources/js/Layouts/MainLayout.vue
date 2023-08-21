@@ -57,13 +57,20 @@ import { loading } from "../Utils/loading";
 const leftDrawerOpen = ref(false);
 const rightDrawerOpen = ref(false);
 const opcionesSistema = ref([
-	{ label: "Productos", tag: "productos", icon: "las la-tags" },
-	{ label: "Agregar Producto", tag: "agregarProducto", icon: "las la-plus" },
-	{ label: "Clientes", tag: "clientes", icon: "las la-user" },
-	{ label: "Agregar Cliente", tag: "agregarCliente", icon: "las la-user-plus" },
+	{ seccion: "Productos", opciones: [
+		{	label: "Productos", tag: "productos", icon: "las la-tags" },
+		{ label: "Agregar Producto", tag: "agregarProducto", icon: "las la-plus" },
+	]},
+	{ seccion: "Clientes", opciones: [
+		{ label: "Clientes", tag: "clientes", icon: "las la-user" },
+		{ label: "Agregar Cliente", tag: "agregarCliente", icon: "las la-user-plus" },
+	]},
+	
 ]);
 const opcionesConfiguracion = ref([
-	{ label: "Cerrar Sesión", tag: "cerrarSesion", icon: "las la-sign-out-alt" },
+	{ seccion: "Configuraciones", opciones: [
+			{ label: "Cerrar Sesión", tag: "cerrarSesion", icon: "las la-sign-out-alt" },
+	]},
 ]);
 const toggleLeftDrawer = () => leftDrawerOpen.value = !leftDrawerOpen.value;
 const toggleRightDrawer = () => rightDrawerOpen.value = !rightDrawerOpen.value;
