@@ -40,6 +40,11 @@ LISTADO CON HEADER PARA HEIGHT CORRECTO */
   min-height: 600px;
 }
 
+.tabla-agregar-movimiento {
+  height: calc(100vh - 285px);
+  min-height: 200px;
+}
+
 .fs-italic {
   font-style: italic;
 }
