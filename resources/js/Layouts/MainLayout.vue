@@ -60,6 +60,7 @@ const opcionesSistema = ref([
 	{ seccion: "Productos", opciones: [
 		{	label: "Productos", tag: "productos", icon: "las la-tags" },
 		{ label: "Agregar Producto", tag: "agregarProducto", icon: "las la-plus" },
+		{ label: "Entradas y Salidas", tag: "agregarMovimientoInventario", icon: "las la-exchange-alt" },
 	]},
 	{ seccion: "Clientes", opciones: [
 		{ label: "Clientes", tag: "clientes", icon: "las la-user" },

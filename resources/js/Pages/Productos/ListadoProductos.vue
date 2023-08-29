@@ -8,7 +8,7 @@
         :rows-per-page-options="[10]"
         :filter="filter"
         class="tabla-listado striped-table"
-        row-key="cvemat" 
+        row-key="producto_id" 
       >
         <template v-slot:top-right>
           <q-input outlined dense debounce="300" v-model="filter" placeholder="Búsqueda" 

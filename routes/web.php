@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\DocenteController;
+use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,11 @@ Route::middleware('sys')->group(function () {
     Route::get('editar/{id}', [ClienteController::class, 'editarClienteView'])->name('editar.clientes');
     Route::post('editar/{id}', [ClienteController::class, 'editar']);
     Route::post('eliminar/{id}', [ClienteController::class, 'eliminar']);
+  });
+  // INVENTARIO
+  Route::prefix('inventarios')->group(function () {
+    Route::get('agregar', [InventarioController::class, 'agregarMovimientoInventarioView'])->name('agregar.inventario');
+    Route::post('agregar', [InventarioController::class, 'agregar']);
   });
 });
 

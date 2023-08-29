@@ -39,6 +39,10 @@ export default {
         case 'agregarProducto':
           url = "/productos/agregar";
           break;
+
+        case 'agregarMovimientoInventario':
+          url = "/inventarios/agregar";
+          break;
         
         case 'clientes':
           url = "/clientes";

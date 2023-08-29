@@ -120,4 +120,30 @@ class ProductoServiceAction
       throw $th;
     }
   }
+  
+  /**
+   * actualizarStockService
+   *
+   * @param  mixed $datos [productoId, cantidad]
+   * @return bool
+   */
+  public static function actualizarStockService(array $datos): bool
+  {
+    try {
+
+      // Buscar el producto existente por su id
+      $producto = Producto::find($datos['productoId']);
+
+      // Se actualiza stock
+      $producto->existencia = $producto->existencia + $datos['cantidad'];
+      $producto->actualizacion_autor_id = Utils::getUserId();
+      $producto->actualizacion_fecha = $datos['fechaActual'];
+
+      $producto->save();
+
+      return true;
+    } catch (\Throwable $th) {
+      throw $th;
+    }
+  }
 }

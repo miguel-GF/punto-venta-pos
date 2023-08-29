@@ -125,7 +125,7 @@
                         dense
                         outlined
                         placeholder="Stock del producto"
-                        :rules="[val => !!val || 'La existencia es obligatoria',]"
+                        :rules="[val => val === null || val >= 0 || 'La existencia debe ser mayor o igual a cero']"
                       />
                     </div>
                   </div>
@@ -169,7 +169,7 @@ export default {
         nombre: "",
         descripcion: "",
         precio: "",
-        existencia: "",
+        existencia: 0,
       },
       mostrarModalExito: false,
       mensajeConfirmacion: "",
