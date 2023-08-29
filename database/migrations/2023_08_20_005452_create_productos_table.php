@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('codigo_barras', 30);
             $table->string('nombre', 120);
             $table->text('descripcion');
-            $table->double('precio');
-            $table->double('existencia');
+            $table->decimal('precio');
+            $table->decimal('existencia');
             $table->string('status')->default('Activo');
             $table->unsignedBigInteger('registro_autor_id');
             $table->unsignedBigInteger('actualizacion_autor_id')->nullable();
