@@ -10,6 +10,18 @@
   min-height: 200px;
 }
 
+.w10p {
+  width: 10%;
+}
+
+.w40p {
+  width: 40%;
+}
+
+.w90p {
+  width: 90%;
+}
+
 .w250 {
   width: 250px;
 }
