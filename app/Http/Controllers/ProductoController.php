@@ -153,4 +153,25 @@ class ProductoController extends Controller
 			'mensaje' => $mensaje,
 		]);
 	}
+
+	public function obtenerProductoDetalle($busqueda)
+	{
+		try {
+			$busqueda = strtoupper($busqueda);
+			$producto = Producto::where('clave', $busqueda)
+				->orWhere('codigo_barras', $busqueda) ->first();
+		return response([
+			'producto' => $producto,
+			'mensaje' => 'Producto obtenido correctamente',
+			'status' => 200
+		]);
+		} catch (Throwable $th) {
+			Log::error($th);
+			response([
+				'producto' => $producto,
+				'mensaje' => 'Ocurrió un error al obtener información del producto',
+				'status' => 300
+			], 300);
+		}
+	}
 }

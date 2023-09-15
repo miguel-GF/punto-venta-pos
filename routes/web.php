@@ -25,6 +25,7 @@ Route::middleware('sys')->group(function () {
   // PRODUCTOS
   Route::prefix('productos')->group(function () {
     Route::get('/', [ProductoController::class, 'productosView'])->name('productos');
+    Route::get('/detalle/{busqueda}', [ProductoController::class, 'obtenerProductoDetalle']);
     Route::get('agregar', [ProductoController::class, 'agregarProductoView'])->name('agregar.productos');
     Route::post('agregar', [ProductoController::class, 'agregar']);
     Route::get('editar/{id}', [ProductoController::class, 'editarProductoView'])->name('editar.productos');

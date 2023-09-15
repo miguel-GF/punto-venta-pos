@@ -6,6 +6,7 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { Quasar, Notify, Loading } from "quasar";
 import TheDialogConfirm from "./Components/TheDialogConfirm.vue"
 import TheDialogResponse from "./Components/TheDialogResponse.vue"
+import SearchProduct from "./Components/SearchProduct.vue"
 
 // Import icon libraries
 import '@quasar/extras/material-icons/material-icons.css'
@@ -31,6 +32,7 @@ createInertiaApp({
     });
     vueApp.component('the-dialog-confirm', TheDialogConfirm);
     vueApp.component('the-dialog-response', TheDialogResponse);
+    vueApp.component('dialog-search-product', SearchProduct);
     vueApp.mount(el);
     return vueApp;
   },

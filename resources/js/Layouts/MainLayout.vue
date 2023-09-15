@@ -17,6 +17,7 @@
 					{{ `${$page.props.usuario.nombre || '--'} - ${$page.props.usuario.correo || '--'}` }}
 				</div>
 
+				<q-btn dense flat round icon="las la-search" @click="mostrarModalProducto(true)" class="q-mr-sm" />
 				<q-btn dense flat round icon="las la-cog" @click="toggleRightDrawer" />
 			</q-toolbar>
 		</q-header>
@@ -46,6 +47,12 @@
 				</main>
 			</div>
 		</q-page-container>
+
+		<!-- MODALES -->
+		<dialog-search-product 
+			:mostrar="modalProducto"
+			@cerrar="mostrarModalProducto(false)"
+		/>
 	</q-layout>
 </template>
 
@@ -56,6 +63,7 @@ import { Link } from "@inertiajs/inertia-vue3";
 import { loading } from "../Utils/loading";
 const leftDrawerOpen = ref(false);
 const rightDrawerOpen = ref(false);
+const modalProducto = ref(false);
 const opcionesSistema = ref([
 	{ seccion: "Productos", opciones: [
 		{	label: "Productos", tag: "productos", icon: "las la-tags" },
@@ -75,6 +83,7 @@ const opcionesConfiguracion = ref([
 ]);
 const toggleLeftDrawer = () => leftDrawerOpen.value = !leftDrawerOpen.value;
 const toggleRightDrawer = () => rightDrawerOpen.value = !rightDrawerOpen.value;
+const mostrarModalProducto = (value) => modalProducto.value = value;
 </script>
 
 <style scoped>
