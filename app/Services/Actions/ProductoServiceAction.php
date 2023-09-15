@@ -6,7 +6,6 @@ use App\Constants;
 use App\Models\Producto;
 use App\Utils;
 use Illuminate\Support\Facades\DB;
-use Exception;
 
 class ProductoServiceAction
 {
@@ -29,7 +28,7 @@ class ProductoServiceAction
 
       // Crear un nuevo objeto Producto
       $producto = new Producto([
-        'clave' => $datos['clave'],
+        'clave' => strtoupper($datos['clave']),
         'codigo_barras' => $datos['codigoBarras'],
         'nombre' => $datos['nombre'],
         'descripcion' => $datos['descripcion'],
@@ -71,7 +70,7 @@ class ProductoServiceAction
       $producto = Producto::find($datos['productoId']);
 
       // Actualizar los campos del producto
-      $producto->clave = $datos['clave'];
+      $producto->clave = strtoupper($datos['clave']);
       $producto->codigo_barras = $datos['codigoBarras'];
       $producto->nombre = $datos['nombre'];
       $producto->descripcion = $datos['descripcion'];

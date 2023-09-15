@@ -35,6 +35,7 @@
                     placeholder="Clave del producto"
                     maxlength="15"
                     :rules="[val => !!val || 'La clave es obligatoria',]"
+                    input-class="text-uppercase"
                   />
                 </div>
               </div>
