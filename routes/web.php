@@ -5,6 +5,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\VentaController;
 use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,14 +24,14 @@ Route::prefix('docente')->middleware('sys')->group(function () {
 Route::middleware('sys')->group(function () {
   Route::get('dashboard', [ViewController::class, 'docenteDashboardView'])->name('dashboard');
   // PRODUCTOS
-  Route::prefix('productos')->group(function () {
-    Route::get('/', [ProductoController::class, 'productosView'])->name('productos');
-    Route::get('/detalle/{busqueda}', [ProductoController::class, 'obtenerProductoDetalle']);
-    Route::get('agregar', [ProductoController::class, 'agregarProductoView'])->name('agregar.productos');
-    Route::post('agregar', [ProductoController::class, 'agregar']);
-    Route::get('editar/{id}', [ProductoController::class, 'editarProductoView'])->name('editar.productos');
-    Route::post('editar/{id}', [ProductoController::class, 'editar']);
-    Route::post('eliminar/{id}', [ProductoController::class, 'eliminar']);
+  Route::controller(ProductoController::class)->prefix('productos')->group(function () {
+    Route::get('/', 'productosView')->name('productos');
+    Route::get('/detalle/{busqueda}', 'obtenerProductoDetalle');
+    Route::get('agregar', 'agregarProductoView')->name('agregar.productos');
+    Route::post('agregar', 'agregar');
+    Route::get('editar/{id}', 'editarProductoView')->name('editar.productos');
+    Route::post('editar/{id}', 'editar');
+    Route::post('eliminar/{id}', 'eliminar');
   });
   // CLIENTES
   Route::prefix('clientes')->group(function () {
@@ -45,6 +46,11 @@ Route::middleware('sys')->group(function () {
   Route::prefix('inventarios')->group(function () {
     Route::get('agregar', [InventarioController::class, 'agregarMovimientoInventarioView'])->name('agregar.inventario');
     Route::post('agregar', [InventarioController::class, 'agregar']);
+  });
+  // VENTAS
+  Route::controller(VentaController::class)->prefix('ventas')->group(function () {
+    Route::get('agregar', 'agregarVentaView')->name('agregar.venta');
+    // Route::post('agregar', 'agregar');
   });
 });
 
