@@ -1,6 +1,6 @@
 <template>
   <MainLayout>
-    <div class="q-pa-md">
+    <div class="q-pa-md full-height">
       <q-table 
         title="Lista de Clientes"
         :rows="clientes"

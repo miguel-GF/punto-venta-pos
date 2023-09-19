@@ -1,7 +1,7 @@
 <template>
   <MainLayout>
-    <div class="q-pa-md hc-100-50">
-      <q-card class="q-pa-md full-height overflow-hidden">
+    <div class="q-pa-md full-height">
+      <q-card class="q-px-md q-pt-sm full-height overflow-auto">
         <div class="row col-12 justify-between q-mb-md">
           <div class="text-h4">Agregar Movimiento Inventario</div>
           <div class="q-my-auto">

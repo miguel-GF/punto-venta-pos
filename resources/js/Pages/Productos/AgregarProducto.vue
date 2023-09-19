@@ -1,7 +1,7 @@
 <template>
   <MainLayout>
-    <div class="q-pa-md hc-100-50">
-      <q-card class="q-pa-md full-height overflow-hidden">
+    <div class="q-pa-md full-height">
+      <q-card class="q-pa-md full-height overflow-auto">
         <div class="row col-12 justify-between q-mb-md">
           <div class="text-h4">Agregar Nuevo Producto</div>
           <div class="q-my-auto">
@@ -16,7 +16,7 @@
           </div>
         </div>
         <q-separator class="q-mb-md" />
-        <q-scroll-area class="hc-100-220 minh-200">
+        <!-- <q-scroll-area class="hc-100-220 minh-200"> -->
           <q-form ref="form" @submit.prevent="guardar()">
             <input ref="inputSubmit" hidden type="submit">
             <div class="row col-12 justify-center full-height">
@@ -140,7 +140,7 @@
               </div>
             </div>
           </q-form>
-        </q-scroll-area>
+        <!-- </q-scroll-area> -->
       </q-card>
     </div>
     <!-- MODALES -->

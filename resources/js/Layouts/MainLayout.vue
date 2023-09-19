@@ -1,26 +1,37 @@
 <template>
 	<!-- view="hHh lpR fFf " -->
 	<q-layout>
-		<q-header reveal elevated class="bg-primary text-white">
-			<q-toolbar>
-				<q-btn dense flat round icon="las la-bars" @click="toggleLeftDrawer" />
+		<q-page-container class="row col-12 column window-height">
+			<div>
+				<q-header reveal elevated class="bg-primary text-white">
+					<q-toolbar>
+						<q-btn dense flat round icon="las la-bars" @click="toggleLeftDrawer" />
 
-				<q-toolbar-title>
-					<!-- <q-avatar>
-						<img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
-					</q-avatar>
-					Home-->
-					<Link @click="loading(true)" class="cursor-pointer" as="label" v-if="$page.props.usuario.tipo == 'sistema'"
-						href="/dashboard">Home</Link>
-				</q-toolbar-title>
-				<div class="text-left q-pr-sm">
-					{{ `${$page.props.usuario.nombre || '--'} - ${$page.props.usuario.correo || '--'}` }}
+						<q-toolbar-title>
+							<!-- <q-avatar>
+								<img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
+							</q-avatar>
+							Home-->
+							<Link @click="loading(true)" class="cursor-pointer" as="label" v-if="$page.props.usuario.tipo == 'sistema'"
+								href="/dashboard">Home</Link>
+						</q-toolbar-title>
+						<div class="text-left q-pr-sm">
+							{{ `${$page.props.usuario.nombre || '--'} - ${$page.props.usuario.correo || '--'}` }}
+						</div>
+
+						<q-btn dense flat round icon="las la-search" @click="mostrarModalProducto(true)" class="q-mr-sm" />
+						<q-btn dense flat round icon="las la-cog" @click="toggleRightDrawer" />
+					</q-toolbar>
+				</q-header>
+			</div>
+			<div class="col full-height">
+				<div class="bg-grey-4 d-block full-height">
+					<main class="full-height">
+						<slot />
+					</main>
 				</div>
-
-				<q-btn dense flat round icon="las la-search" @click="mostrarModalProducto(true)" class="q-mr-sm" />
-				<q-btn dense flat round icon="las la-cog" @click="toggleRightDrawer" />
-			</q-toolbar>
-		</q-header>
+			</div>
+		</q-page-container>
 
 		<q-drawer v-model="leftDrawerOpen" side="left" overlay bordered>
 			<q-list bordered>
@@ -40,13 +51,13 @@
 			</q-list>
 		</q-drawer>
 
-		<q-page-container>
+		<!-- <q-page-container>
 			<div class="bg-grey-4 d-block height-layout-main">
 				<main>
 					<slot />
 				</main>
 			</div>
-		</q-page-container>
+		</q-page-container> -->
 
 		<!-- MODALES -->
 		<dialog-search-product 
@@ -69,6 +80,9 @@ const opcionesSistema = ref([
 		{	label: "Productos", tag: "productos", icon: "las la-tags" },
 		{ label: "Agregar Producto", tag: "agregarProducto", icon: "las la-plus" },
 		{ label: "Entradas y Salidas", tag: "agregarMovimientoInventario", icon: "las la-exchange-alt" },
+	]},
+	{ seccion: "Ventas", opciones: [
+		{	label: "Nueva Venta", tag: "agregarVenta", icon: "las la-file-invoice-dollar" },
 	]},
 	{ seccion: "Clientes", opciones: [
 		{ label: "Clientes", tag: "clientes", icon: "las la-user" },
