@@ -12,7 +12,7 @@ class ViewController extends Controller
         return Inertia::render('Login', []);
     }
 
-    public function docenteDashboardView()
+    public function dashboardView()
     {
         $user = Utils::getUser();
         return Inertia::render('Dashboard', [
