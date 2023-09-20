@@ -18,7 +18,7 @@
           </template>
           {{ mensajeBanner || '--' }}
         </q-banner>
-        <div v-html="mensaje"></div>
+        <div class="text-center" v-html="mensaje"></div>
       </q-card-section>
 
       <q-separator />
@@ -59,7 +59,7 @@ export default {
       }
       else if (this.banner == 'confirmar') {
         this.mensajeBanner = 'Esta apunto de confirmar la acción';
-        return 'bg-blue-5';
+        return 'bg-blue-5 text-white';
       }
       else if (this.banner == 'advertencia') {
         this.mensajeBanner = 'Esta acción es irreversible';

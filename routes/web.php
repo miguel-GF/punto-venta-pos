@@ -14,15 +14,8 @@ Route::get('/login', [ViewController::class, 'loginView'])->middleware('login')-
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
-Route::prefix('docente')->middleware('sys')->group(function () {
-  Route::get('dashboard', [ViewController::class, 'docenteDashboardView'])->name('docente.dashboard');
-  Route::get('cargasAcademicas', [DocenteController::class, 'docenteCargasAcademicasView'])->name('docente.cargas.academicas');
-  Route::get('pasarAsistencias/{claveMateria}', [DocenteController::class, 'docentePasarAsistenciasCargasAcademicasView'])->name('docente.pasar.asistencias');
-  Route::post('pasarAsistencias', [DocenteController::class, 'pasarAsistencias']);
-});
-
 Route::middleware('sys')->group(function () {
-  Route::get('dashboard', [ViewController::class, 'docenteDashboardView'])->name('dashboard');
+  Route::get('dashboard', [ViewController::class, 'dashboardView'])->name('dashboard');
   // PRODUCTOS
   Route::controller(ProductoController::class)->prefix('productos')->group(function () {
     Route::get('/', 'productosView')->name('productos');
@@ -50,7 +43,7 @@ Route::middleware('sys')->group(function () {
   // VENTAS
   Route::controller(VentaController::class)->prefix('ventas')->group(function () {
     Route::get('agregar', 'agregarVentaView')->name('agregar.venta');
-    // Route::post('agregar', 'agregar');
+    Route::post('agregar', 'agregar');
   });
 });
 

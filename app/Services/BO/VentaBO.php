@@ -4,7 +4,7 @@ namespace App\Services\BO;
 
 use stdClass;
 
-class DocenteBO
+class VentaBO
 {
   /**
    * armarInsertAsistencia

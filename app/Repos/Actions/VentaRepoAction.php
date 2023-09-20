@@ -5,7 +5,7 @@ namespace App\Repos\Actions;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 
-class DocenteRepoAction
+class VentaRepoAction
 {
   /**
    * agregar nuevo registro en Asistencias
