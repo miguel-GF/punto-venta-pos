@@ -1,7 +1,7 @@
 <template>
   <MainLayout>
     <div class="q-pa-md full-height">
-      <q-table 
+      <q-table
         title="Lista de Productos"
         :rows="productos"
         :columns="columns"

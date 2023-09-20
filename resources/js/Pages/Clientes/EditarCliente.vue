@@ -107,7 +107,7 @@
                 <div class="q-mb-xs">
                   <q-select
                     :options="tipoPersonas"
-                    v-model.trim="form.tipoPersona"
+                    v-model="form.tipoPersona"
                     id="tipoPersona"
                     dense
                     outlined
