@@ -6,12 +6,24 @@
   height: calc(100vh - 220px);
 }
 
+.hc-100-180 {
+  height: calc(100vh - 180px);
+}
+
 .minh-200 {
   min-height: 200px;
 }
 
 .w10p {
   width: 10%;
+}
+
+.w15p {
+  width: 15%;
+}
+
+.w20p {
+  width: 20%;
 }
 
 .w40p {
@@ -28,6 +40,14 @@
 
 .w350 {
   width: 350px;
+}
+
+.mw-288 {
+  max-width: 288px;
+}
+
+.fs-1rem {
+  font-size: 1rem;
 }
 
 .break-words-3-lines {
@@ -54,6 +74,11 @@ LISTADO CON HEADER PARA HEIGHT CORRECTO */
 
 .tabla-agregar-movimiento {
   height: calc(100vh - 285px);
+  min-height: 200px;
+}
+
+.tabla-agregar-venta {
+  height: calc(100vh - 272px);
   min-height: 200px;
 }
 
