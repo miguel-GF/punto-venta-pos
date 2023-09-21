@@ -4,7 +4,10 @@ namespace App\Services\Actions;
 
 use App\Constants;
 use App\Models\Cliente;
+use App\Repos\Actions\VentaRepoAction;
+use App\Services\BO\VentaBO;
 use App\Utils;
+use App\UtilsDB;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
@@ -20,32 +23,18 @@ class VentaServiceAction
   {
     try {
       DB::beginTransaction();
+      
+      $datos['folio'] = UtilsDB::obtenerFolioGlobalForUpdate(Constants::CAT_FOLIO_GLOBAL_VENTA);
+      $insert = VentaBO::armarInsertVenta($datos);
+      $datos['ventaId'] = VentaRepoAction::agregar($insert);
 
-      if (!empty($datos['correo'])) {
-        $existe = Cliente::where('correo', $datos['correo'])->exists();
-  
-        if ($existe) {
-          return false;
-        }
+      $productos = json_decode($datos['productos']);
+      $detalles = [];
+      foreach ($productos as $producto) {
+        $insertDetalle = VentaBO::armarInsertVentaDetalle($datos, $producto);
+        array_push($detalles, $insertDetalle);
       }
-
-      // Crear un nuevo objeto Producto
-      $producto = new Cliente([
-        'nombre_comercial' => $datos['nombreComercial'],
-        'telefono' => $datos['telefono'] ?? null,
-        'eslogan' => $datos['eslogan'] ?? null,
-        'correo' => $datos['correo'] ?? null,
-        'tipo_persona' => $datos['tipoPersona'] ?? null,
-        'razon_social' => $datos['razonSocial'] ?? null,
-        'rfc' => $datos['rfc'] ?? null,
-        'codigo_postal' => $datos['codigoPostal'] ?? null,
-        'domicilio_fiscal' => $datos['domicilioFiscal'] ?? null,
-        'correo_fiscal' => $datos['correoFiscal'] ?? null,
-        'registro_autor_id' => Utils::getUserId(),
-        'registro_fecha' => $datos['fechaActual'],
-      ]);
-
-      $producto->save();
+      VentaRepoAction::agregarDetalle($detalles);
 
       DB::commit();
 

@@ -2,31 +2,49 @@
 
 namespace App\Services\BO;
 
+use App\Utils;
 use stdClass;
 
 class VentaBO
 {
   /**
-   * armarInsertAsistencia
+   * armarInsertVenta
    *
    * @param  mixed $datos
-   * @param  mixed $alumno
    * @return array
    */
-  public static function armarInsertAsistencia(array $datos, stdClass $alumno): array
+  public static function armarInsertVenta(array $datos): array
   {
     $insert = [];
-    $insert['fecha'] = $datos['fecha'];
-    $insert['plan'] = 'BUAP';
-    $insert['licenciatura'] = $datos['licenciatura'];
-    $insert['sem'] = $datos['semestre'];
-    $insert['grupo'] = $datos['grupo'];
-    $insert['materia'] = $datos['materia'];
-    $insert['cvedoc'] = $datos['idProf'];
-    $insert['numestudiante'] = $alumno->numestudiante;
-    $insert['nombre'] = $alumno->alumno_nombre;
-    $insert['asistencia'] = $alumno->asistencia ? 1 : 0;
-    $insert['periodo'] = $datos['periodo'];
+    $insert['cliente_id'] = $datos['clienteId'];
+    $insert['folio'] = $datos['folio'];
+    $insert['serie_folio'] = "VEN" . $datos['folio'];
+    $insert['total'] = $datos['totalVenta'];
+    $insert['cantidad'] = $datos['numeroProductos'];
+    $insert['registro_autor_id'] = Utils::getUserId();
+    $insert['registro_fecha'] = $datos['fechaActual'];
+
+    return $insert;
+  }
+
+  /**
+   * armarInsertVentaDetalle
+   *
+   * @param  mixed $datos
+   * @param  stdClass $producto
+   * @return array
+   */
+  public static function armarInsertVentaDetalle(array $datos, stdClass $producto): array
+  {
+    $insert = [];
+    $insert['venta_id'] = $datos['ventaId'];
+    $insert['producto_id'] = $producto->producto_id;
+    $insert['total'] = $producto->total;
+    $insert['cantidad'] = $producto->cantidad;
+    $insert['precio_unitario'] = $producto->precio;
+    $insert['producto'] = $producto->nombre;
+    $insert['registro_autor_id'] = Utils::getUserId();
+    $insert['registro_fecha'] = $datos['fechaActual'];
 
     return $insert;
   }

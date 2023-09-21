@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Constants;
 use App\Http\Requests\VentaRequest;
 use App\OrderConstants;
+use App\Services\Actions\VentaServiceAction;
 use App\Services\Data\ClienteServiceData;
 use App\Services\Data\ProductoServiceData;
 use App\Utils;
@@ -46,6 +47,7 @@ class VentaController extends Controller
 	{
 		try {
 			$datos = $request->all();
+      VentaServiceAction::agregar($datos);
 			return response([
 				'mensaje' => 'Venta agregada correctamente',
 				'status' => 200

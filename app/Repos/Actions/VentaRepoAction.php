@@ -8,15 +8,31 @@ use Illuminate\Support\Facades\DB;
 class VentaRepoAction
 {
   /**
-   * agregar nuevo registro en Asistencias
+   * Agregar nueva venta
    *
-   * @param  mixed $datos [idProf]
-   * @return void
+   * @param  mixed $datos
+   * @return mixed
    */
   public static function agregar(array $datos)
   {
     try {
-      DB::table('Asistencias')
+      return DB::table('ventas')
+        ->insertGetId($datos, 'venta_id');
+    } catch (QueryException $th) {
+      throw $th;
+    }
+  }
+
+  /**
+   * Agregar venta detalle
+   *
+   * @param  mixed $datos
+   * @return void
+   */
+  public static function agregarDetalle(array $datos)
+  {
+    try {
+      DB::table('ventas_detalle')
         ->insert($datos);
     } catch (QueryException $th) {
       throw $th;
