@@ -18,6 +18,9 @@ return new class extends Migration
       $table->decimal('total');
       $table->decimal('cantidad');
       $table->decimal('precio_unitario');
+      $table->string('clave', 15);
+      $table->string('codigo_barras', 30);
+      $table->string('producto', 120);
       $table->unsignedBigInteger('registro_autor_id');
       $table->unsignedBigInteger('actualizacion_autor_id')->nullable();
       $table->foreign('venta_id')->references('venta_id')->on('ventas');
