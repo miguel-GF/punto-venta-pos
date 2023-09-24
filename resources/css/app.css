@@ -72,6 +72,11 @@ LISTADO CON HEADER PARA HEIGHT CORRECTO */
   min-height: 600px;
 }
 
+.tabla-detalle-venta {
+  height: calc(100vh - 305px);
+  min-height: 250px;
+}
+
 .tabla-agregar-movimiento {
   height: calc(100vh - 285px);
   min-height: 200px;
