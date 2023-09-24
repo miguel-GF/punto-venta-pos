@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClienteController;
-use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +45,11 @@ Route::middleware('sys')->group(function () {
     Route::get('/', [VentaController::class, 'ventasView'])->name('ventas');
     Route::get('detalle/{id}', [VentaController::class, 'ventaDetalleView'])->name('ventaDetalle');
     Route::get('/agregar', 'agregarVentaView')->name('agregar.venta');
+    Route::post('agregar', 'agregar');
+  });
+  // USUARIOS
+  Route::controller(UsuarioController::class)->prefix('usuarios')->group(function () {
+    Route::get('/agregar', 'agregarUsuarioView')->name('agregar.usuario');
     Route::post('agregar', 'agregar');
   });
 });

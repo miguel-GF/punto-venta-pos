@@ -1,6 +1,6 @@
 <template>
   <q-item-label class="bg-grey-2" header>{{ datos.seccion || '--' }}</q-item-label>
-  <q-item v-for="(opc, i) in datos.opciones" clickable v-ripple @click="onClick(opc)" :key="i">
+  <q-item dense v-for="(opc, i) in datos.opciones" clickable v-ripple @click="onClick(opc)" :key="i">
     <q-item-section>{{ opc.label || '--' }}</q-item-section>
     <q-item-section avatar>
       <q-icon color="secondary" :name="opc.icon" />
@@ -58,6 +58,14 @@ export default {
 
         case 'agregarCliente':
           url = "/clientes/agregar";
+          break;
+
+        case 'usuarios':
+          url = "/usuarios";
+          break;
+
+        case 'agregarUsuario':
+          url = "/usuarios/agregar";
           break;
 
         default:

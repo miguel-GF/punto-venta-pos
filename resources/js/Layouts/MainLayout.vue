@@ -89,7 +89,10 @@ const opcionesSistema = ref([
 		{ label: "Clientes", tag: "clientes", icon: "las la-user" },
 		{ label: "Agregar Cliente", tag: "agregarCliente", icon: "las la-user-plus" },
 	]},
-	
+	{ seccion: "Usuarios", opciones: [
+		{ label: "Usuarios", tag: "usuarios", icon: "las la-user-shield" },
+		{ label: "Agregar Usuario", tag: "agregarUsuario", icon: "las la-user-plus" },
+	]},
 ]);
 const opcionesConfiguracion = ref([
 	{ seccion: "Configuraciones", opciones: [
