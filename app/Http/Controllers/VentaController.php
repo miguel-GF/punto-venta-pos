@@ -47,7 +47,13 @@ class VentaController extends Controller
 	{
 		try {
 			$datos = $request->all();
-      VentaServiceAction::agregar($datos);
+      $res = VentaServiceAction::agregar($datos);
+      if (!$res) {
+        return response([
+          'mensaje' => 'No cuenta con el stock suficiente para completar la venta',
+          'status' => 300
+        ]);  
+      }
 			return response([
 				'mensaje' => 'Venta agregada correctamente',
 				'status' => 200

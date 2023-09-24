@@ -4,8 +4,10 @@ namespace App\Services\Actions;
 
 use App\Constants;
 use App\Models\Cliente;
+use App\Repos\Actions\ProductoRepoAction;
 use App\Repos\Actions\VentaRepoAction;
 use App\Services\BO\VentaBO;
+use App\Services\Data\ProductoServiceData;
 use App\Utils;
 use App\UtilsDB;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +27,12 @@ class VentaServiceAction
       DB::beginTransaction();
       
       $datos['folio'] = UtilsDB::obtenerFolioGlobalForUpdate(Constants::CAT_FOLIO_GLOBAL_VENTA);
+
+      $validar = self::validarAgregarVenta($datos);
+      if (!$validar) {
+        return false;
+      }
+
       $insert = VentaBO::armarInsertVenta($datos);
       $datos['ventaId'] = VentaRepoAction::agregar($insert);
 
@@ -33,9 +41,12 @@ class VentaServiceAction
       foreach ($productos as $producto) {
         $insertDetalle = VentaBO::armarInsertVentaDetalle($datos, $producto);
         array_push($detalles, $insertDetalle);
+        ProductoRepoAction::actualizarStock($datos, $producto);
       }
       VentaRepoAction::agregarDetalle($detalles);
 
+      self::validarVentaCompletada($datos);
+
       DB::commit();
 
       return true;
@@ -46,78 +57,46 @@ class VentaServiceAction
   }
 
   /**
-   * editar
+   * validarAgregar
    *
-   * @param  mixed $datos [clienteId, clave, codigoBarras, nombre, descripcion, precio, existencia, fechaActual]
+   * @param  mixed $datos [productos]
    * @return bool
    */
-  public static function editar(array $datos): bool
+  private  static function validarAgregarVenta(array $datos): bool
   {
     try {
-      DB::beginTransaction();
-
-      if (!empty($datos['correo'])) {
-        $existe = Cliente::where('correo', $datos['correo'])->where('cliente_id', '<>', $datos['clienteId']) ->exists();
-  
-        if ($existe) {
+      $productos = json_decode($datos['productos']);
+      foreach ($productos as $producto) {
+        $productoObj = ProductoServiceData::listarBasico(['productoId' => $producto->producto_id])[0];
+        $existenciaActual = $productoObj->existencia - $producto->cantidad;
+        if ($existenciaActual < 0) {
           return false;
         }
       }
-
-      // Buscar el cliente existente por su id
-      $cliente = Cliente::find($datos['clienteId']);
-
-      // Actualizar los campos del cliente
-      $cliente->nombre_comercial = $datos['nombreComercial'];
-      $cliente->telefono = $datos['telefono'] ?? null;
-      $cliente->eslogan = $datos['eslogan'] ?? null;
-      $cliente->correo = $datos['correo'] ?? null;
-      $cliente->tipo_persona = $datos['tipoPersona'] ?? null;
-      $cliente->razon_social = $datos['razonSocial'] ?? null;
-      $cliente->rfc = $datos['rfc'] ?? null;
-      $cliente->codigo_postal = $datos['codigoPostal'] ?? null;
-      $cliente->domicilio_fiscal = $datos['domicilioFiscal'] ?? null;
-      $cliente->correo_fiscal = $datos['correoFiscal'] ?? null;
-      $cliente->actualizacion_autor_id = Utils::getUserId();
-      $cliente->actualizacion_fecha = $datos['fechaActual'];
-
-      $cliente->save();
-
-      DB::commit();
-
       return true;
     } catch (\Throwable $th) {
-      DB::rollBack();
       throw $th;
     }
   }
 
   /**
-   * editar
+   * validarAgregar
    *
-   * @param  mixed $datos [clienteId, fechaActual]
+   * @param  mixed $datos [productos]
    * @return bool
    */
-  public static function eliminar(array $datos): bool
+  private  static function validarVentaCompletada(array $datos): bool
   {
     try {
-      DB::beginTransaction();
-
-      // Buscar el cliente existente por su id
-      $cliente = Cliente::find($datos['clienteId']);
-
-      // Eliminamos el cliente
-      $cliente->status = Constants::BAJA_STATUS;
-      $cliente->actualizacion_autor_id = Utils::getUserId();
-      $cliente->actualizacion_fecha = $datos['fechaActual'];
-
-      $cliente->save();
-
-      DB::commit();
-
+      $productos = json_decode($datos['productos']);
+      foreach ($productos as $producto) {
+        $productoObj = ProductoServiceData::listarBasico(['productoId' => $producto->producto_id])[0];
+        if ($productoObj->existencia < 0) {
+          return false;
+        }
+      }
       return true;
     } catch (\Throwable $th) {
-      DB::rollBack();
       throw $th;
     }
   }
