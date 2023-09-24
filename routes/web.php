@@ -42,7 +42,9 @@ Route::middleware('sys')->group(function () {
   });
   // VENTAS
   Route::controller(VentaController::class)->prefix('ventas')->group(function () {
-    Route::get('agregar', 'agregarVentaView')->name('agregar.venta');
+    Route::get('/', [VentaController::class, 'ventasView'])->name('ventas');
+    Route::get('detalle/{id}', [VentaController::class, 'ventaDetalleView'])->name('ventaDetalle');
+    Route::get('/agregar', 'agregarVentaView')->name('agregar.venta');
     Route::post('agregar', 'agregar');
   });
 });

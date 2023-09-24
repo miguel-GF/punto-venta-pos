@@ -82,6 +82,7 @@ const opcionesSistema = ref([
 		{ label: "Entradas y Salidas", tag: "agregarMovimientoInventario", icon: "las la-exchange-alt" },
 	]},
 	{ seccion: "Ventas", opciones: [
+		{	label: "Ventas", tag: "ventas", icon: "las la-file-invoice-dollar" },
 		{	label: "Nueva Venta", tag: "agregarVenta", icon: "las la-file-invoice-dollar" },
 	]},
 	{ seccion: "Clientes", opciones: [
