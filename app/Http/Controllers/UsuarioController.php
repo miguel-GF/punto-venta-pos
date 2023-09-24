@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Constants;
 use App\Models\Cliente;
 use App\Services\Actions\ClienteServiceAction;
+use App\Services\Actions\UsuarioServiceAction;
 use App\Utils;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -45,36 +46,28 @@ class UsuarioController extends Controller
 		]);
 	}
 
-	public function editarClienteView($id)
-	{
-		$user = Utils::getUser();
-		$cliente = Cliente::where('cliente_id', $id)->first();
-		return Inertia::render('Clientes/EditarCliente', [
-			'usuario' => $user,
-			'cliente' => $cliente,
-		]);
-	}
-
 	public function agregar(Request $request)
 	{
 		$request->validate([
-			'nombreComercial' => 'required',
+			'nombre' => 'required',
+			'correo' => 'required|email|unique:usuarios,correo',
+			'password' => 'required',
 		]);
 
 		$datos = $request->all();
 
-		$exito = ClienteServiceAction::agregar($datos);
+		$exito = UsuarioServiceAction::agregar($datos);
 		if ($exito) {
 			$status = 200;
-			$mensaje = "Cliente agregado correctamente";
+			$mensaje = "Usuario agregado correctamente";
 		} else {
 			$status = 300;
-			$mensaje = "El correo del cliente ya existe, favor de verificar";
+			$mensaje = "El correo del usuario ya existe, favor de verificar";
 		}
 
 		$user = Utils::getUser();
 
-		return Inertia::render('Clientes/AgregarCliente', [
+		return Inertia::render('Usuarios/AgregarUsuario', [
 			'usuario' => $user,
 			'status' => $status,
 			'mensaje' => $mensaje,
