@@ -15,6 +15,10 @@ class ProductoRH
    */
   public static function obtenerFiltrosListarBasico(&$query, array $filtros)
   {
+    if (!empty($filtros['productoId'])) {
+      $query->where("p.producto_id", [strtolower($filtros['productoId'])]);
+    }
+
     if (!empty($filtros['status'])) {
       $query->whereRaw("LOWER(p.status) = ?", [strtolower($filtros['status'])]);
     }
