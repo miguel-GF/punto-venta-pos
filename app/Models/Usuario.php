@@ -10,7 +10,9 @@ class Usuario extends Model
     use HasFactory;
     protected $table = 'usuarios';
     protected $primaryKey = 'usuario_id';
-    public $timestamps = ['registro_fecha', 'actualizacion_fecha'];
+    public $timestamps = false;
+    const CREATED_AT = 'registro_fecha'; // Definir el nombre de la columna de fecha de creación
+    const UPDATED_AT = 'actualizacion_fecha'; // Definir el nombre de la columna de fecha de actualización
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +23,8 @@ class Usuario extends Model
         'nombre',
         'correo',
         'password',
+        'registro_autor_id',
+        'registro_fecha',
     ];
 
     /**
