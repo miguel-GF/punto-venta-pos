@@ -33,3 +33,25 @@ export const obtenerFechaHoraActualOperacion = () => {
   
   return `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
 };
+
+// Formatear fhecah como YYYY/MMM/DD HH:mm:ss
+export const obtenerFechaHoraLeible = (fechaParam = null, conHoras = true) => {
+  const meses = [
+    "Ene", "Feb", "Mar", "Abr", "May", "Jun",
+    "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
+  ];
+
+  const fecha = fechaParam ? new Date(fechaParam) : new Date();
+  const anio = fecha.getFullYear();
+  const mes = meses[fecha.getMonth()];
+  const dia = ("0" + fecha.getDate()).slice(-2);
+  const horas = ("0" + fecha.getHours()).slice(-2);
+  const minutos = ("0" + fecha.getMinutes()).slice(-2);
+  const segundos = ("0" + fecha.getSeconds()).slice(-2);
+
+  if (conHoras) {
+    return `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
+  }
+
+  return `${anio}-${mes}-${dia}`;
+};
