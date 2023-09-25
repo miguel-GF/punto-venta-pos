@@ -42,7 +42,9 @@ class VentaBO
     $insert['total'] = $producto->total;
     $insert['cantidad'] = $producto->cantidad;
     $insert['precio_unitario'] = $producto->precio;
+    $insert['clave'] = $producto->clave;
     $insert['producto'] = $producto->nombre;
+    $insert['codigo_barras'] = $producto->codigo_barras;
     $insert['registro_autor_id'] = Utils::getUserId();
     $insert['registro_fecha'] = $datos['fechaActual'];
 
