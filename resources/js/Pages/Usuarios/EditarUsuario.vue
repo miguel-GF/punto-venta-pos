@@ -3,7 +3,7 @@
     <div class="q-pa-md full-height">
       <q-card class="q-pa-md full-height overflow-auto">
         <div class="row col-12 justify-between q-mb-md">
-          <div class="text-h4">Agregar Nuevo Usuario</div>
+          <div class="text-h4">Editar Usuario</div>
           <div class="q-my-auto">
             <q-btn @click="regresar()" dense icon-right="chevron_left" color="secondary" class="q-mr-md">
               <div class="q-px-sm">Regresar</div>
@@ -23,13 +23,13 @@
               <div class="text-h6 text-grey-9 text-left fs-italic">Datos Generales</div>
               <q-separator />
             </div>
-            <!-- Nombre -->
+            <!-- NOMBRE -->
             <div class="q-mb-xs col-8">
               <div class="q-mb-xs">
                 <label>Nombre *</label>
               </div>
               <div class="q-mb-xs">
-                <q-input v-model.trim="form.nombre" id="usuario" ref="nombreInput" dense outlined placeholder="Nombre"
+                <q-input v-model.trim="form.nombre" id="nombre" ref="nombreInput" dense outlined placeholder="Nombre"
                   maxlength="150" :rules="[val => !!val || 'El nombre es obligatorio',]" />
               </div>
             </div>
@@ -45,11 +45,21 @@
             </div>
             <!-- Password -->
             <div class="q-mb-lg col-8">
-              <div class="q-mb-xs">
-                <label>Password *</label>
+              <div class="q-mb-xs row">
+                <div class="q-pr-md">
+                  <label>Editar Password</label>
+                </div>
+                <div>
+                  <q-toggle
+                    :label="editarPassword ?  'Si' : 'No'"
+                    v-model="editarPassword"
+                    dense
+                  />
+                </div>
               </div>
               <div class="q-mb-xs">
-                <q-input dense outlined v-model="form.password" :type="isPwd ? 'password' : 'text'"
+                <q-input :disable="!editarPassword" dense outlined v-model="form.password"
+                  :type="isPwd ? 'password' : 'text'"
                   hint="Password mínimo 6 carácteres, recuerda guardar el password en un lugar seguro, antes de guardar cambios."
                   :rules="[val => !!val || 'El password es obligatorio', val => val.length > 5 || 'Mínimo 6 caracteres obligatorios',]">
                   <template v-slot:append>
@@ -62,7 +72,7 @@
                       </q-tooltip>
                     </div>
                     <div>
-                      <q-icon  name="las la-random" class="cursor-pointer" @click="generarPasswordAleatorio()" />
+                      <q-icon name="las la-random" class="cursor-pointer" @click="generarPasswordAleatorio()" />
                       <q-tooltip>
                         Password aleatorio
                       </q-tooltip>
@@ -98,8 +108,8 @@ import { generarPassword } from '../../Utils/string';
 import { obtenerFechaHoraActualOperacion } from '../../Utils/date';
 import { copyToClipboard } from 'quasar';
 export default {
-  name: "AgregarUsuario",
-  props: ["status", "mensaje"],
+  name: "EditarUsuario",
+  props: ["usuarioEditar", "status", "mensaje"],
   components: { MainLayout },
   data() {
     return {
@@ -109,44 +119,54 @@ export default {
         password: "",
       },
       isPwd: true,
+      editarPassword: false,
       mostrarModalExito: false,
       mensajeConfirmacion: "",
     }
   },
   created() {
+    if (this.usuarioEditar && !this.status) {
+      this.llenarDatosForm();
+      this.$nextTick(() => this.$refs.nombreInput.focus());
+    }
     loading(false);
-    this.$nextTick(() => this.$refs.nombreInput.focus());
   },
   updated() {
     loading(false);
     if (this.status == 200) {
       this.mostrarModalExito = true;
+      this.llenarDatosForm();
     } else if (this.status == 300) {
       notify(this.mensaje, 'error');
     }
   },
   methods: {
+    llenarDatosForm() {
+      const { nombre, correo } = this.usuarioEditar;
+      this.form = {
+        nombre,
+        correo,
+      };
+    },
     regresar() {
       loading(true);
       this.$inertia.get('/usuarios');
     },
     guardar() {
-      loading(true, 'Agregando ...');
+      loading(true, 'Editando ...');
       const form = {
         ...this.form,
+        editarPassword: this.editarPassword ? 'si' : 'no',
         fechaActual: obtenerFechaHoraActualOperacion(),
       };
-      this.$inertia.post("/usuarios/agregar", form);
+      this.$inertia.post("/usuarios/editar/" + this.usuarioEditar.usuario_id, form);
     },
     limpiar() {
-      this.form = {
-        nombre: "",
-        correo: "",
-        password: "",
-      };
       this.$nextTick(() => {
         this.$refs.nombreInput.focus();
         this.$refs.form.resetValidation();
+        this.form.password = "";
+        this.editarPassword = false;
       });
     },
     validarCorreo(val) {
@@ -162,8 +182,8 @@ export default {
     },
     copiarPassword() {
       copyToClipboard(this.form.password)
-      .then(() => notify('Password copiado al portapapeles correctamente.', 'info'))
-      .catch(() => notify('Ocurrio un error al intentar copiar el password al portapapeles.', 'error'));
+        .then(() => notify('Password copiado al portapapeles correctamente.', 'info'))
+        .catch(() => notify('Ocurrio un error al intentar copiar el password al portapapeles.', 'error'));
     },
     generarPasswordAleatorio() {
       this.form.password = generarPassword();

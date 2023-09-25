@@ -3,11 +3,9 @@
 namespace App\Services\Actions;
 
 use App\Constants;
-use App\Models\Cliente;
 use App\Models\Usuario;
 use App\Utils;
 use Illuminate\Support\Facades\DB;
-use Exception;
 
 class UsuarioServiceAction
 {
@@ -54,7 +52,7 @@ class UsuarioServiceAction
   /**
    * editar
    *
-   * @param  mixed $datos [clienteId, clave, codigoBarras, nombre, descripcion, precio, existencia, fechaActual]
+   * @param  mixed $datos [usuarioId, nombre, correo, password, fechaActual]
    * @return bool
    */
   public static function editar(array $datos): bool
@@ -63,31 +61,27 @@ class UsuarioServiceAction
       DB::beginTransaction();
 
       if (!empty($datos['correo'])) {
-        $existe = Cliente::where('correo', $datos['correo'])->where('cliente_id', '<>', $datos['clienteId']) ->exists();
+        $existe = Usuario::where('correo', $datos['correo'])->where('usuario_id', '<>', $datos['usuarioId']) ->exists();
   
         if ($existe) {
           return false;
         }
       }
 
-      // Buscar el cliente existente por su id
-      $cliente = Cliente::find($datos['clienteId']);
+      // Buscar el usuario existente por su id
+      $usuario = Usuario::find($datos['usuarioId']);
 
-      // Actualizar los campos del cliente
-      $cliente->nombre_comercial = $datos['nombreComercial'];
-      $cliente->telefono = $datos['telefono'] ?? null;
-      $cliente->eslogan = $datos['eslogan'] ?? null;
-      $cliente->correo = $datos['correo'] ?? null;
-      $cliente->tipo_persona = $datos['tipoPersona'] ?? null;
-      $cliente->razon_social = $datos['razonSocial'] ?? null;
-      $cliente->rfc = $datos['rfc'] ?? null;
-      $cliente->codigo_postal = $datos['codigoPostal'] ?? null;
-      $cliente->domicilio_fiscal = $datos['domicilioFiscal'] ?? null;
-      $cliente->correo_fiscal = $datos['correoFiscal'] ?? null;
-      $cliente->actualizacion_autor_id = Utils::getUserId();
-      $cliente->actualizacion_fecha = $datos['fechaActual'];
+      // Actualizar los campos del usuario
+      $usuario->nombre = $datos['nombre'];
+      $usuario->correo = $datos['correo'];
 
-      $cliente->save();
+      if ($datos['editarPassword'] == 'si') {
+        $usuario->password = md5($datos['password']);
+      }
+      $usuario->actualizacion_autor_id = Utils::getUserId();
+      $usuario->actualizacion_fecha = $datos['fechaActual'];
+
+      $usuario->save();
 
       DB::commit();
 
@@ -101,7 +95,7 @@ class UsuarioServiceAction
   /**
    * editar
    *
-   * @param  mixed $datos [clienteId, fechaActual]
+   * @param  mixed $datos [usuarioId, fechaActual]
    * @return bool
    */
   public static function eliminar(array $datos): bool
@@ -109,15 +103,15 @@ class UsuarioServiceAction
     try {
       DB::beginTransaction();
 
-      // Buscar el cliente existente por su id
-      $cliente = Cliente::find($datos['clienteId']);
+      // Buscar el usuario existente por su id
+      $usuario = Usuario::find($datos['usuarioId']);
 
-      // Eliminamos el cliente
-      $cliente->status = Constants::BAJA_STATUS;
-      $cliente->actualizacion_autor_id = Utils::getUserId();
-      $cliente->actualizacion_fecha = $datos['fechaActual'];
+      // Eliminamos el usuario
+      $usuario->status = Constants::BAJA_STATUS;
+      $usuario->actualizacion_autor_id = Utils::getUserId();
+      $usuario->actualizacion_fecha = $datos['fechaActual'];
 
-      $cliente->save();
+      $usuario->save();
 
       DB::commit();
 

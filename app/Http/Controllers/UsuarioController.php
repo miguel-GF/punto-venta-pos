@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Constants;
-use App\Models\Cliente;
-use App\Services\Actions\ClienteServiceAction;
+use App\Models\Usuario;
 use App\Services\Actions\UsuarioServiceAction;
 use App\Utils;
 use Illuminate\Database\QueryException;
@@ -16,19 +15,19 @@ use Throwable;
 
 class UsuarioController extends Controller
 {
-	public function clientesView()
+	public function usuariosView()
 	{
 		try {
 			$user = Utils::getUser();
-			$clientes = DB::table('clientes')
+			$usuarios = DB::table('usuarios')
 				->whereRaw("LOWER(status) = ?", [strtolower(Constants::ACTIVO_STATUS)])
-				->where('publico_general', false)
+				->where('mostrar', 1)
 				->get()
 				->toArray();
 
-			return Inertia::render('Clientes/ListadoClientes', [
+			return Inertia::render('Usuarios/ListadoUsuarios', [
 				'usuario' => $user,
-				'clientes' => $clientes,
+				'usuarios' => $usuarios,
 			]);
 		} catch (QueryException $qe) {
 			Log::error($qe);
@@ -74,33 +73,46 @@ class UsuarioController extends Controller
 		]);
 	}
 
+  public function editarUsuarioView($id)
+	{
+		$user = Utils::getUser();
+		$usuario = Usuario::where('usuario_id', $id)->first();
+		return Inertia::render('Usuarios/EditarUsuario', [
+			'usuario' => $user,
+			'usuarioEditar' => $usuario,
+		]);
+	}
+
 	public function editar(Request $request, $id)
 	{
 		$request->validate([
-			'nombreComercial' => 'required',
+			'nombre' => 'required',
+			'correo' => 'required',
+			'editarPassword' => 'required',
+			'password' => 'nullable',
 		]);
 
 		$datos = $request->all();
-		$datos['clienteId'] = $id;
+		$datos['usuarioId'] = $id;
 
-		$exito = ClienteServiceAction::editar($datos);
+		$exito = UsuarioServiceAction::editar($datos);
 		if ($exito) {
 			$status = 200;
-			$mensaje = "Cliente editado correctamente";
+			$mensaje = "Usuario editado correctamente";
 		} else {
 			$status = 300;
-			$mensaje = "La correo del cliente ya existe, favor de verificar";
+			$mensaje = "La correo del usuario ya existe, favor de verificar";
 		}
 
 		$user = Utils::getUser();
 
-		$cliente = Cliente::where('cliente_id', $id)->first();
+		$usuario = Usuario::where('usuario_id', $id)->first();
 
-		return Inertia::render('Clientes/EditarCliente', [
+		return Inertia::render('Usuarios/EditarUsuario', [
 			'usuario' => $user,
 			'status' => $status,
 			'mensaje' => $mensaje,
-			'cliente' => $cliente,
+			'usuarioEditar' => $usuario,
 		]);
 	}
 
@@ -111,27 +123,27 @@ class UsuarioController extends Controller
 		]);
 
 		$datos = $request->all();
-		$datos['clienteId'] = $id;
+		$datos['usuarioId'] = $id;
 
-		$exito = ClienteServiceAction::eliminar($datos);
+		$exito = UsuarioServiceAction::eliminar($datos);
 		if ($exito) {
 			$status = 200;
-			$mensaje = "Cliente eliminado correctamente";
+			$mensaje = "Usuario eliminado correctamente";
 		} else {
 			$status = 300;
-			$mensaje = "Ocurrio un error al intentar eliminar el cliente";
+			$mensaje = "Ocurrio un error al intentar eliminar el usuario";
 		}
 
 		$user = Utils::getUser();
-		$clientes = DB::table('clientes')
+		$usuarios = DB::table('usuarios')
 				->whereRaw("LOWER(status) = ?", [strtolower(Constants::ACTIVO_STATUS)])
-				->where('publico_general', false)
+				->where('mostrar', 1)
 				->get()
 				->toArray();
 
-		return Inertia::render('Clientes/ListadoClientes', [
+		return Inertia::render('Usuarios/ListadoUsuarios', [
 			'usuario' => $user,
-			'clientes' => $clientes,
+			'usuarios' => $usuarios,
 			'status' => $status,
 			'mensaje' => $mensaje,
 		]);

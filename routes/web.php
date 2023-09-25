@@ -49,8 +49,12 @@ Route::middleware('sys')->group(function () {
   });
   // USUARIOS
   Route::controller(UsuarioController::class)->prefix('usuarios')->group(function () {
+    Route::get('/', [UsuarioController::class, 'usuariosView'])->name('usuarios');
     Route::get('/agregar', 'agregarUsuarioView')->name('agregar.usuario');
     Route::post('agregar', 'agregar');
+    Route::get('editar/{id}', [UsuarioController::class, 'editarUsuarioView'])->name('editar.usuarios');
+    Route::post('editar/{id}', [UsuarioController::class, 'editar']);
+    Route::post('eliminar/{id}', [UsuarioController::class, 'eliminar']);
   });
 });
 
