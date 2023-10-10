@@ -24,6 +24,7 @@
             @keypress.enter="obtenerProducto()"
             placeholder="Buscar por Clave / Código Barras"
             input-class="text-uppercase"
+            :maxlength="$page.props.usuario.lectura_modo_monitor ? 4 : 20"
           >
           <template v-slot:append>
             <q-icon name="las la-times-circle" class="cursor-pointer"
@@ -100,6 +101,10 @@ export default {
     titulo: {
       type: String,
       default: 'Búsqueda de Producto',
+    },
+    usuario: {
+      type: Object,
+      default: () => {},
     },
   },
   data() {

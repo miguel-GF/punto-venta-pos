@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constants;
 use App\Models\Producto;
+use App\Models\Usuario;
 use App\Services\Actions\ProductoServiceAction;
 use App\Utils;
 use Illuminate\Database\QueryException;
@@ -157,9 +158,21 @@ class ProductoController extends Controller
 	public function obtenerProductoDetalle($busqueda)
 	{
 		try {
-			$busqueda = strtoupper($busqueda);
-			$producto = Producto::where('clave', $busqueda)
-				->orWhere('codigo_barras', $busqueda) ->first();
+      $busqueda = strtoupper($busqueda);
+      $usuarioConfig = Usuario::find(Utils::getUserId());
+      if (!$usuarioConfig->lectura_modo_monitor) {
+        $producto = Producto::where('codigo_barras', $busqueda)
+          ->orWhere('clave', $busqueda) ->first();
+      } else {
+        if (strlen($busqueda) > 4) {
+          $busqueda = substr($busqueda, 0, 4);
+        }
+        $producto = DB::table('productos')
+          ->whereRaw("SUBSTRING(codigo_barras, 1, 4) = ?", [$busqueda])
+          ->orWhereRaw("SUBSTRING(clave, 1, 4) = ?", [$busqueda])
+          ->get()
+          ->first();
+      }
 		return response([
 			'producto' => $producto,
 			'mensaje' => 'Producto obtenido correctamente',
