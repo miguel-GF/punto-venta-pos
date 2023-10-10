@@ -7,6 +7,8 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\ViewController;
+use App\Http\Controllers\ConfiguracionController;
+// use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 
 // login
@@ -42,19 +44,24 @@ Route::middleware('sys')->group(function () {
   });
   // VENTAS
   Route::controller(VentaController::class)->prefix('ventas')->group(function () {
-    Route::get('/', [VentaController::class, 'ventasView'])->name('ventas');
-    Route::get('detalle/{id}', [VentaController::class, 'ventaDetalleView'])->name('ventaDetalle');
+    Route::get('/', 'ventasView')->name('ventas');
+    Route::get('detalle/{id}', 'ventaDetalleView')->name('ventaDetalle');
     Route::get('/agregar', 'agregarVentaView')->name('agregar.venta');
     Route::post('agregar', 'agregar');
   });
   // USUARIOS
   Route::controller(UsuarioController::class)->prefix('usuarios')->group(function () {
-    Route::get('/', [UsuarioController::class, 'usuariosView'])->name('usuarios');
+    Route::get('/', 'usuariosView')->name('usuarios');
     Route::get('/agregar', 'agregarUsuarioView')->name('agregar.usuario');
     Route::post('agregar', 'agregar');
-    Route::get('editar/{id}', [UsuarioController::class, 'editarUsuarioView'])->name('editar.usuarios');
-    Route::post('editar/{id}', [UsuarioController::class, 'editar']);
-    Route::post('eliminar/{id}', [UsuarioController::class, 'eliminar']);
+    Route::get('editar/{id}', 'editarUsuarioView')->name('editar.usuarios');
+    Route::post('editar/{id}', 'editar');
+    Route::post('eliminar/{id}', 'eliminar');
+  });
+  // CONFIGURACIONES
+  Route::controller(ConfiguracionController::class)->prefix('configuraciones')->group(function () {
+    Route::get('usuario', 'configuracionUsuarioSesionView');
+    Route::post('usuario', 'editarConfiguracionUsuarioSesion');
   });
 });
 
