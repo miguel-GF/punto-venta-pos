@@ -25,6 +25,13 @@ class Usuario extends Model
         'password',
         'registro_autor_id',
         'registro_fecha',
+        'actualizacion_autor_id',
+        'actualizacion_fecha',
+        'impresora_predeterminada',
+        'impresora_nombre',
+        'impresora_puerto',
+        'impresora_ip',
+        'lectura_modo_monitor'
     ];
 
     /**

@@ -30,7 +30,6 @@ class Cliente extends Model
         'cfid_clave',
         'cfdi_nombre',
         'correo_fiscal',
-        'actualizacion_autor_id',
         'registro_autor_id',
         'registro_fecha',
         'actualizacion_fecha',
