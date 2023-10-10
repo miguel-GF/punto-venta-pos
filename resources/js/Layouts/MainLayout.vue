@@ -60,7 +60,7 @@
 		</q-page-container> -->
 
 		<!-- MODALES -->
-		<dialog-search-product 
+		<dialog-search-product
 			:mostrar="modalProducto"
 			@cerrar="mostrarModalProducto(false)"
 		/>
@@ -96,7 +96,8 @@ const opcionesSistema = ref([
 ]);
 const opcionesConfiguracion = ref([
 	{ seccion: "Configuraciones", opciones: [
-			{ label: "Cerrar Sesión", tag: "cerrarSesion", icon: "las la-sign-out-alt" },
+    { label: "Lectura e Impresora", tag: "lecturaImpresora", icon: "las la-print" },
+    { label: "Cerrar Sesión", tag: "cerrarSesion", icon: "las la-sign-out-alt" },
 	]},
 ]);
 const toggleLeftDrawer = () => leftDrawerOpen.value = !leftDrawerOpen.value;

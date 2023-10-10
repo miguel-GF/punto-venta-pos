@@ -68,6 +68,10 @@ export default {
           url = "/usuarios/agregar";
           break;
 
+        case 'lecturaImpresora':
+          url = "/configuraciones/usuario";
+          break;
+
         default:
           url = "";
           break;
