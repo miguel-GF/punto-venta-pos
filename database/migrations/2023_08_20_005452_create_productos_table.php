@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('descripcion');
             $table->decimal('precio');
             $table->decimal('existencia');
-            $table->string('status')->default('Activo');
+            $table->string('status')->default('Activo')->comment('Baja');
             $table->unsignedBigInteger('registro_autor_id');
             $table->unsignedBigInteger('actualizacion_autor_id')->nullable();
             $table->foreign('registro_autor_id')->references('usuario_id')->on('usuarios');

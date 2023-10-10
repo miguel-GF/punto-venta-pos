@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('eslogan')->nullable();
             $table->string('correo')->nullable();
             $table->boolean('publico_general')->default(false);
-            $table->string('status', 12)->default('Activo');
+            $table->string('status', 12)->default('Activo')->comment('Activo, Baja');
             // Datos fiscales
             $table->string('tipo_persona', 6)->nullable();
             $table->string('pais', 30)->nullable()->default('México');
@@ -49,7 +49,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('productos', function (Blueprint $table) {
+        Schema::table('clientes', function (Blueprint $table) {
             // Cambiar los nombres de nuevo en la migración de rollback
             $table->renameColumn('registro_fecha', 'created_at');
             $table->renameColumn('actualizacion_fecha', 'updated_at');

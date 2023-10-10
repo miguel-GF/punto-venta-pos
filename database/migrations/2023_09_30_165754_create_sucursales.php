@@ -11,18 +11,18 @@ return new class extends Migration
    */
   public function up(): void
   {
-    Schema::create('ventas', function (Blueprint $table) {
-      $table->id('venta_id');
-      $table->unsignedBigInteger('cliente_id');
+    Schema::create('sucursales', function (Blueprint $table) {
+      $table->id('sucursal_id');
       $table->integer('folio');
-      $table->string('serie_folio', 12);
-      $table->decimal('total');
-      $table->decimal('cantidad');
-      $table->string('status')->default('Activo')->comment('Activo');
-      $table->string('tipo_venta')->default('Efectivo')->comment('Efectivo, Debito, Credito');
+      $table->string('clave', 10);
+      $table->string('nombre', 100);
+      $table->text('direccion');
+      $table->string('telefono', 15)->nullable();
+      $table->string('rfc', 15)->nullable();
+      $table->string('status', 12)->default('Activo')->comment('Activo');
+      $table->boolean('default')->default(true);
       $table->unsignedBigInteger('registro_autor_id');
       $table->unsignedBigInteger('actualizacion_autor_id')->nullable();
-      $table->foreign('cliente_id')->references('cliente_id')->on('clientes');
       $table->foreign('registro_autor_id')->references('usuario_id')->on('usuarios');
       $table->foreign('actualizacion_autor_id')->references('usuario_id')->on('usuarios');
       $table->timestamps();
@@ -38,11 +38,11 @@ return new class extends Migration
    */
   public function down(): void
   {
-    Schema::table('ventas', function (Blueprint $table) {
+    Schema::table('sucursales', function (Blueprint $table) {
       // Cambiar los nombres de nuevo en la migración de rollback
       $table->renameColumn('registro_fecha', 'created_at');
       $table->renameColumn('actualizacion_fecha', 'updated_at');
     });
-    Schema::dropIfExists('ventas');
+    Schema::dropIfExists('sucursales');
   }
 };
