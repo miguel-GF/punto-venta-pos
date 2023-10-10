@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Constants;
 use App\Http\Requests\VentaRequest;
+use App\Models\Usuario;
 use App\OrderConstants;
 use App\Services\Actions\VentaServiceAction;
 use App\Services\Data\ClienteServiceData;
 use App\Services\Data\ProductoServiceData;
+use App\Services\Data\VentaServiceData;
 use App\Utils;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
@@ -29,6 +31,8 @@ class VentaController extends Controller
 				'status' => Constants::ACTIVO_STATUS,
 				'ordenar' => OrderConstants::NOMBRE_ASC,
 			]);
+      $usuarioConfig = Usuario::find(Utils::getUserId());
+      $user->lectura_modo_monitor = $usuarioConfig->lectura_modo_monitor;
 
 			return Inertia::render('Ventas/AgregarVenta', [
 				'usuario' => $user,
@@ -49,16 +53,28 @@ class VentaController extends Controller
 		try {
 			$datos = $request->all();
       $res = VentaServiceAction::agregar($datos);
-      if (!$res) {
-        return response([
-          'mensaje' => 'No cuenta con el stock suficiente para completar la venta',
-          'status' => 300
-        ]);  
+
+      switch ($res) {
+        case 301:
+        case 302:
+          $mensaje = 'No cuenta con el stock suficiente para completar la venta';
+          $status = $res;
+          break;
+
+        case 303:
+          $mensaje = 'Venta agregada correctamente pero no se pudo imprimir el ticket de la venta';
+          $status = 201;
+          break;
+        
+        default:
+          $mensaje = 'Venta agregada correctamente';
+          $status = 200;
+          break;
       }
-			return response([
-				'mensaje' => 'Venta agregada correctamente',
-				'status' => 200
-			]);
+      return response([
+        'mensaje' => $mensaje,
+        'status' => $status
+      ]);
 		} catch (Throwable $th) {
 			Log::error($th);
 			response([
@@ -100,25 +116,13 @@ class VentaController extends Controller
 	{
 		try {
 			$user = Utils::getUser();
-			$venta = DB::table('ventas as  v')
-        ->select(
-          'v.*',
-          'u.nombre as usuario_nombre'
-        )
-        ->join('usuarios as u', 'u.usuario_id', 'v.registro_autor_id')
-				->where("v.venta_id", "$id")
-				->get()
-				->first();
 
-      $ventaDetalle = DB::table('ventas_detalle as vd')
-				->where("vd.venta_id", "$id")
-				->get()
-				->toArray();
+      $detalle = VentaServiceData::obtenerDetalle($id);
 
 			return Inertia::render('Ventas/DetalleVenta', [
 				'usuario' => $user,
-				'venta' => $venta,
-				'ventaDetalle' => $ventaDetalle,
+				'venta' => $detalle->info,
+				'ventaDetalle' => $detalle->detalles,
 			]);
 
 		} catch (QueryException $qe) {

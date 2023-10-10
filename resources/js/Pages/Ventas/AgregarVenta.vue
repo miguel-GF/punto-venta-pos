@@ -65,6 +65,7 @@
               @keypress.enter="obtenerProducto()"
               placeholder="Buscar por Clave / Código Barras"
               input-class="text-uppercase"
+              :maxlength="usuario.lectura_modo_monitor ? 4 : 20"
             >
               <template v-slot:append>
                 <q-icon name="las la-times-circle" class="cursor-pointer"
@@ -143,7 +144,7 @@ import { formatearNumero } from '../../Utils/format';
 import { obtenerFechaHoraActualOperacion } from '../../Utils/date';
 export default {
   name: "AgregarVenta",
-  props: ["status", "mensaje", "clientes", "productos"],
+  props: ["usuario", "status", "mensaje", "clientes", "productos"],
   components: { MainLayout },
   data() {
     return {
