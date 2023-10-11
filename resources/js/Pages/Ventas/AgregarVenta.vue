@@ -51,31 +51,40 @@
           </div>
           <q-separator vertical class="" />
           <div class="col q-pl-md">
-            <div class="q-mb-xs">
-              <label class="fs-1rem text-grey-9 fs-italic">Producto *</label>
+            <div class="row col-12">
+              <div class="row col-9">
+                <label class="fs-1rem text-grey-9 fs-italic q-my-auto">Producto</label>
+                <div class="col q-pl-md">
+                  <q-input
+                    v-model.trim="form.busqueda"
+                    type="text"
+                    id="busqueda"
+                    ref="busqueda"
+                    dense
+                    outlined
+                    autofocus
+                    @keypress.enter="obtenerProducto()"
+                    placeholder="Buscar por Clave / Código Barras"
+                    input-class="text-uppercase"
+                    :maxlength="usuario.lectura_modo_monitor ? 4 : 20"
+                  >
+                    <template v-slot:append>
+                      <q-icon name="las la-times-circle" class="cursor-pointer"
+                        @click="form.busqueda = '', $refs.busqueda.focus()"
+                      />
+                      <q-icon name="search" class="cursor-pointer"
+                        @click="obtenerProducto()"
+                      />
+                    </template>
+                  </q-input>
+                </div>
+              </div>
+              <div class="col-3 q-my-auto q-pl-md">
+                <q-btn outline @click="mostrarModalBusquedaProductos = true" dense icon-right="las la-filter" color="primary">
+                  <div class="q-px-sm">Búsqueda Avanzada</div>
+                </q-btn>
+              </div>
             </div>
-            <q-input
-              v-model.trim="form.busqueda"
-              type="text"
-              id="busqueda"
-              ref="busqueda"
-              dense
-              outlined
-              autofocus
-              @keypress.enter="obtenerProducto()"
-              placeholder="Buscar por Clave / Código Barras"
-              input-class="text-uppercase"
-              :maxlength="usuario.lectura_modo_monitor ? 4 : 20"
-            >
-              <template v-slot:append>
-                <q-icon name="las la-times-circle" class="cursor-pointer"
-                  @click="form.busqueda = '', $refs.busqueda.focus()"
-                />
-                <q-icon name="search" class="cursor-pointer"
-                  @click="obtenerProducto()"
-                />
-              </template>
-            </q-input>
             <!-- PRODUCTOS -->
             <div class="q-mt-md">
               <q-table
@@ -84,7 +93,8 @@
                 :columns="columns"
                 :rows-per-page-options="[10]"
                 class="tabla-agregar-venta striped-table"
-                row-key="producto_id" 
+                row-key="producto_id"
+                no-data-label="Sin registros encontrados"
               >
                 <template #body-cell-cantidad="{row, rowIndex}">
                   <q-td class="text-right">
@@ -133,6 +143,13 @@
       :mensaje="mensajeExito"
       @aceptar="mostrarModalExito = false, limpiar()"
     />
+
+    <!-- DIALOGO DE BUSQUEDAS DE PRODUCTOS -->
+    <productos-seleccion-modal
+      :mostrar="mostrarModalBusquedaProductos"
+      @cerrar="mostrarModalBusquedaProductos = false"
+      @seleccionar-producto="seleccionarProducto"
+    />
   </MainLayout>
 </template>
 
@@ -157,6 +174,7 @@ export default {
       },
       mostrarModalConfirmar: false,
       mostrarModalExito: false,
+      mostrarModalBusquedaProductos: false,
       columns: [
         {
           name: 'clave',
@@ -370,6 +388,12 @@ export default {
       }, 0);
       this.form.numeroProductos = suma;
       return suma;
+    },
+    seleccionarProducto(producto) {
+      console.log('producto seleccionado');
+      console.log(producto);
+      this.mostrarModalBusquedaProductos = false;
+      this.guardarProducto(producto);
     }
   }
 };
