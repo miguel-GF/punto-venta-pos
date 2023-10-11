@@ -140,7 +140,6 @@ export default {
   data() {
     return {
       productos: [],
-      productoObj: {},
       busqueda: '',
       columns: [
         {
@@ -226,8 +225,7 @@ export default {
     },
     cerrar() {
       this.$emit('cerrar');
-      this.productoObj = {};
-      this.productos = {};
+      this.productos = [];
       this.busqueda = '';
     },
     formatear(val, tipo) {

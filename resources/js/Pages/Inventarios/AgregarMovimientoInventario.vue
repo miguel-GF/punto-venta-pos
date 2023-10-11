@@ -17,9 +17,14 @@
           <div class="q-my-auto q-pr-md">
             Tipo de Movimiento
           </div>
-          <div class="q-gutter-md">
+          <div class="q-gutter-md q-pt-xs">
             <q-radio dense v-model="form.tipoMovimiento" val="Entrada" label="Entradas" />
             <q-radio dense v-model="form.tipoMovimiento" val="Salida" label="Salidas" />
+          </div>
+          <div class="text-left q-pl-lg">
+            <q-btn outline @click="mostrarModalBusquedaProductos = true" dense icon-right="las la-filter" color="primary">
+              <div class="q-px-sm">Búsqueda Avanzada</div>
+            </q-btn>
           </div>
         </div>
         <div class="row col-12 text-right justify-end q-pr-md q-pb-md">
@@ -32,6 +37,7 @@
               outlined
               placeholder="Buscar por Clave / Código de Barras"
               @keyup.enter.native="guardar()"
+              :maxlength="usuario.lectura_modo_monitor ? 4 : 20"
             />
           </div>
           <div class="col-2 q-my-auto q-pr-md">
@@ -42,6 +48,7 @@
               v-model.number="form.cantidad"
               type="number"
               step="any"
+              ref="cantidadInput"
               dense
               outlined
               placeholder="Cantidad a ingresar"
@@ -85,6 +92,13 @@
       :mensaje="mensaje"
       @aceptar="mostrarModalExito = false, limpiar()"
     />
+
+    <!-- DIALOGO DE BUSQUEDAS DE PRODUCTOS -->
+    <productos-seleccion-modal
+      :mostrar="mostrarModalBusquedaProductos"
+      @cerrar="mostrarModalBusquedaProductos = false"
+      @seleccionar-producto="seleccionarProducto"
+    />
   </MainLayout>
 </template>
 
@@ -107,6 +121,7 @@ export default {
         cantidad: 1
       },
       mostrarModalExito: false,
+      mostrarModalBusquedaProductos: false,
       mensajeConfirmacion: "",
       columns: [
         {
@@ -200,6 +215,15 @@ export default {
       this.$nextTick(() => {
         this.$refs.busquedaInput.focus();
       });
+    },
+    seleccionarProducto(producto) {
+      this.mostrarModalBusquedaProductos = false;
+      if (this.usuario.lectura_modo_monitor) {
+        this.form.busqueda = producto?.codigo_barras.slice(0, 4);
+      } else {
+        this.form.busqueda = producto?.codigo_barras;
+      }
+      this.$nextTick(() => this.$refs.cantidadInput.focus());
     }
   }
 };

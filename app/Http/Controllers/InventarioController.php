@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Usuario;
 use App\Services\Actions\InventarioServiceAction;
 use App\Services\Data\InventarioServiceData;
 use App\Utils;
@@ -19,6 +20,8 @@ class InventarioController extends Controller
 			$user = Utils::getUser();
 			$movimientos = InventarioServiceData::listar([]);
 
+      $usuarioConfig = Usuario::find(Utils::getUserId());
+      $user->lectura_modo_monitor = $usuarioConfig->lectura_modo_monitor;
 			return Inertia::render('Inventarios/AgregarMovimientoInventario', [
 				'usuario' => $user,
 				'movimientos' => $movimientos,
