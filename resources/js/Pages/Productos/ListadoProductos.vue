@@ -8,7 +8,9 @@
         :rows-per-page-options="[10]"
         :filter="filter"
         class="tabla-listado striped-table"
-        row-key="producto_id" 
+        row-key="producto_id"
+        no-data-label="Sin registros encontrados"
+        no-results-label="Sin registros encontrados"
       >
         <template v-slot:top-right>
           <q-input outlined dense debounce="300" v-model="filter" placeholder="Búsqueda" 

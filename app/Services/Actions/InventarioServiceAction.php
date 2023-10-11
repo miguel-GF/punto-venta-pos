@@ -28,19 +28,9 @@ class InventarioServiceAction
         $producto = Producto::where('clave', $datos['busqueda'])->get()->first();
       }
 
-      Log::info('mikde');
-      Log::info(json_encode($producto));
-      Log::info(empty($producto));
-      Log::info(!empty($producto));
-
       if (empty($producto)) {
         return 300;
       }
-
-      Log::info('mikde');
-      Log::info(json_encode($producto));
-      Log::info(empty($producto));
-      Log::info(!empty($producto));
 
       if ($datos['tipoMovimiento'] == Constants::SALIDA_MOVIMIENTO_INVENTARIO_TIPO) {
         $cantidad = $datos['cantidad'] * -1;

@@ -139,9 +139,6 @@ export default {
       this.productoObj = {};
       this.busqueda = '';
     },
-    aceptar() {
-      this.$emit('aceptar');
-    },
     formatear(val, tipo) {
       return formatearNumero(val, tipo);
     }

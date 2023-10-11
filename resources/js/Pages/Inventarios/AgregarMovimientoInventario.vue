@@ -61,7 +61,8 @@
           :columns="columns"
           :rows-per-page-options="[10]"
           class="tabla-agregar-movimiento striped-table"
-          row-key="movimiento_inventario_id" 
+          row-key="movimiento_inventario_id"
+          no-data-label="Sin registros encontrados"
         >
           <template v-slot:top-right>
             Movimientos de la fecha actual: {{ fechaHoy }}

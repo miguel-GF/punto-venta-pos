@@ -2,7 +2,10 @@
   <MainLayout>
     <div class="q-pa-md full-height">
       <q-table title="Lista de Ventas" :rows="ventas" :columns="columns" :rows-per-page-options="[10]" :filter="filter"
-        class="tabla-listado striped-table" row-key="venta_id">
+        class="tabla-listado striped-table" row-key="venta_id"
+        no-data-label="Sin registros encontrados"
+        no-results-label="Sin registros encontrados"
+      >
         <template v-slot:top-right>
           <q-input outlined dense debounce="300" v-model="filter" placeholder="Búsqueda" class="q-mr-md">
             <template v-slot:append>
