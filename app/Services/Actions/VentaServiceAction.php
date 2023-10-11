@@ -21,9 +21,9 @@ class VentaServiceAction
    * agregar
    *
    * @param  mixed $datos [clienteId, productos, totalVenta, numeroProductos, fechaActual]
-   * @return bool
+   * @return mixed
    */
-  public static function agregar(array $datos): bool
+  public static function agregar(array $datos): mixed
   {
     try {
       DB::beginTransaction();
@@ -54,9 +54,10 @@ class VentaServiceAction
 
       DB::commit();
 
-      $resTicket = self::imprimirVenta($datos['ventaId']);
+      // $resTicket = self::imprimirVenta($datos['ventaId']);
 
-      return $resTicket->status;
+      // return $resTicket->status;
+      return 200;
     } catch (Throwable $th) {
       DB::rollBack();
       throw $th;

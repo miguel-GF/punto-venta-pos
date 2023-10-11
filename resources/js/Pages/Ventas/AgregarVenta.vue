@@ -390,8 +390,6 @@ export default {
       return suma;
     },
     seleccionarProducto(producto) {
-      console.log('producto seleccionado');
-      console.log(producto);
       this.mostrarModalBusquedaProductos = false;
       this.guardarProducto(producto);
     }

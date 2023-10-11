@@ -222,6 +222,8 @@ export default {
     },
     seleccionarProducto(producto) {
       this.$emit('seleccionar-producto', producto);
+      this.productos = [];
+      this.busqueda = '';
     },
     cerrar() {
       this.$emit('cerrar');

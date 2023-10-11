@@ -65,9 +65,9 @@ Route::middleware('sys')->group(function () {
     Route::post('usuario', 'editarConfiguracionUsuarioSesion');
   });
   // TICKET
-  Route::controller(TicketController::class)->prefix('tickets')->group(function () {
-    Route::get('imprimir/venta/{id}', 'imprimirVenta');
-  });
+  // Route::controller(TicketController::class)->prefix('tickets')->group(function () {
+  //   Route::get('imprimir/venta/{id}', 'imprimirVenta');
+  // });
 });
 
 // Ruta de fallback para redireccionar a la página de inicio de sesión

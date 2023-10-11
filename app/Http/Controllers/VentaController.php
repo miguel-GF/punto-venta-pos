@@ -54,6 +54,9 @@ class VentaController extends Controller
 			$datos = $request->all();
       $res = VentaServiceAction::agregar($datos);
 
+      Log::info('ya en controller');
+      Log::info($res);
+
       switch ($res) {
         case 301:
         case 302:
