@@ -21,6 +21,7 @@ Route::middleware('sys')->group(function () {
   // PRODUCTOS
   Route::controller(ProductoController::class)->prefix('productos')->group(function () {
     Route::get('/', 'productosView')->name('productos');
+    Route::get('/listar', 'listarProductos')->name('productosBusqueda');
     Route::get('/detalle/{busqueda}', 'obtenerProductoDetalle');
     Route::get('agregar', 'agregarProductoView')->name('agregar.productos');
     Route::post('agregar', 'agregar');
@@ -62,6 +63,10 @@ Route::middleware('sys')->group(function () {
   Route::controller(ConfiguracionController::class)->prefix('configuraciones')->group(function () {
     Route::get('usuario', 'configuracionUsuarioSesionView');
     Route::post('usuario', 'editarConfiguracionUsuarioSesion');
+  });
+  // TICKET
+  Route::controller(TicketController::class)->prefix('tickets')->group(function () {
+    Route::get('imprimir/venta/{id}', 'imprimirVenta');
   });
 });
 

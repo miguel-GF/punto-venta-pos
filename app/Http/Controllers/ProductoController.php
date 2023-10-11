@@ -6,6 +6,7 @@ use App\Constants;
 use App\Models\Producto;
 use App\Models\Usuario;
 use App\Services\Actions\ProductoServiceAction;
+use App\Services\Data\ProductoServiceData;
 use App\Utils;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -182,6 +183,26 @@ class ProductoController extends Controller
 			Log::error($th);
 			response([
 				'producto' => $producto,
+				'mensaje' => 'Ocurrió un error al obtener información del producto',
+				'status' => 300
+			], 300);
+		}
+	}
+
+  public function listarProductos(Request $request)
+	{
+		try {
+      $datos = $request->all();
+      $productos = ProductoServiceData::listarBasico($datos);
+		return response([
+			'productos' => $productos,
+			'mensaje' => 'Productos obtenidos correctamente',
+			'status' => 200
+		]);
+		} catch (Throwable $th) {
+			Log::error($th);
+			response([
+				'productos' => [],
 				'mensaje' => 'Ocurrió un error al obtener información del producto',
 				'status' => 300
 			], 300);

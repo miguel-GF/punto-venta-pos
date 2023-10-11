@@ -17,6 +17,7 @@ class ProductoRepoData
   {
     $query = DB::table('productos as p')
       ->select(
+        'p.producto_id',
         'p.clave',
         'p.codigo_barras',
         'p.nombre',
