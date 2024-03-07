@@ -64,6 +64,8 @@ Route::middleware('sys')->group(function () {
   Route::controller(ConfiguracionController::class)->prefix('configuraciones')->group(function () {
     Route::get('usuario', 'configuracionUsuarioSesionView');
     Route::post('usuario', 'editarConfiguracionUsuarioSesion');
+    Route::get('sucursalDefault', 'configuracionSucursalDefaultView');
+    Route::post('sucursalDefault', 'editarConfiguracionSucursalDefault');
   });
   // TICKET
   // Route::controller(TicketController::class)->prefix('tickets')->group(function () {

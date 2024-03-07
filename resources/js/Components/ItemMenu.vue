@@ -72,6 +72,10 @@ export default {
           url = "/configuraciones/usuario";
           break;
 
+        case 'edicionSucursalDefault':
+          url = "/configuraciones/sucursalDefault";
+          break;
+
         default:
           url = "";
           break;

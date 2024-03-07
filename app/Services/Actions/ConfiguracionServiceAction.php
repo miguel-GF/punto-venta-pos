@@ -2,8 +2,10 @@
 
 namespace App\Services\Actions;
 
-use App\Constants;
+use Throwable;
 use App\Models\Usuario;
+use App\Repos\Actions\SucursalRepoAction;
+use App\Services\BO\ConfiguracionBO;
 use App\Utils;
 use Illuminate\Support\Facades\DB;
 
@@ -33,6 +35,29 @@ class ConfiguracionServiceAction
 
       return true;
     } catch (\Throwable $th) {
+      DB::rollBack();
+      throw $th;
+    }
+  }
+
+  /**
+   * editar
+   *
+   * @param  mixed $datos [lecturaCompleta, fechaActual]
+   * @return bool
+   */
+  public static function editarConfiguracionSucursalDefault(array $datos): bool
+  {
+    try {
+      DB::beginTransaction();
+
+      $update = ConfiguracionBO::armarUpdateSucursalDefault($datos);
+      SucursalRepoAction::actualizar($update, $datos['sucursalId']);
+
+      DB::commit();
+
+      return true;
+    } catch (Throwable $th) {
       DB::rollBack();
       throw $th;
     }

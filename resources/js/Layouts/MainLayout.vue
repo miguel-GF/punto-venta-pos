@@ -97,6 +97,7 @@ const opcionesSistema = ref([
 const opcionesConfiguracion = ref([
 	{ seccion: "Configuraciones", opciones: [
     { label: "Lectura e Impresora", tag: "lecturaImpresora", icon: "las la-print" },
+    { label: "Editar Sucursal", tag: "edicionSucursalDefault", icon: "las la-store-alt" },
     { label: "Cerrar Sesión", tag: "cerrarSesion", icon: "las la-sign-out-alt" },
 	]},
 ]);

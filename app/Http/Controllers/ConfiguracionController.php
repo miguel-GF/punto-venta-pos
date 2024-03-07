@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants;
+use App\Exceptions\ExceptionHandler;
 use App\Models\Usuario;
 use App\Services\Actions\ConfiguracionServiceAction;
+use App\Services\Data\SucursalServiceData;
 use App\Utils;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Throwable;
 
 class ConfiguracionController extends Controller
 {
@@ -46,5 +50,69 @@ class ConfiguracionController extends Controller
       'status' => $status,
       'mensaje' => $mensaje,
 		]);
+	}
+
+  public function configuracionSucursalDefaultView()
+	{
+		$user = Utils::getUser();
+    $sucursalDefault = SucursalServiceData::listarBasico([
+      'status' => Constants::ACTIVO_STATUS,
+      'default' => 1
+    ])[0];
+		return Inertia::render('Configuraciones/ConfiguracionEditarSucursalDefault', [
+			'usuario' => $user,
+      'sucursalDefault' => $sucursalDefault,
+		]);
+	}
+
+  public function editarConfiguracionSucursalDefault(Request $request)
+	{
+    try {
+      $request->validate([
+        'sucursalId' => 'required',
+        'nombre' => 'required',
+        'direccion' => 'required',
+        'fechaActual' => 'required',
+        'telefono' => 'nullable',
+        'rfc' => 'nullable',
+        'ticketLeyendaPie' => 'nullable',
+      ]);
+  
+      $datos = $request->all();
+  
+      $exito = ConfiguracionServiceAction::editarConfiguracionSucursalDefault($datos);
+      if ($exito) {
+        $status = 200;
+        $mensaje = "Datos de sucursal editada correctamente";
+      } else {
+        $status = 300;
+        $mensaje = "Ocurrio un error al editar datos de sucursal";
+      }
+  
+      $user = Utils::getUser();
+      $sucursalDefault = SucursalServiceData::listarBasico([
+        'status' => Constants::ACTIVO_STATUS,
+        'default' => 1
+      ])[0];
+      return Inertia::render('Configuraciones/ConfiguracionEditarSucursalDefault', [
+        'usuario' => $user,
+        'sucursalDefault' => $sucursalDefault,
+        'status' => $status,
+        'mensaje' => $mensaje,
+      ]);
+    } catch (Throwable $th) {
+      ExceptionHandler::manejarException($th);
+      $user = Utils::getUser();
+      $sucursalDefault = SucursalServiceData::listarBasico([
+        'status' => Constants::ACTIVO_STATUS,
+        'default' => 1
+      ])[0];
+      return Inertia::render('Configuraciones/ConfiguracionEditarSucursalDefault', [
+        'usuario' => $user,
+        'sucursalDefault' => $sucursalDefault,
+        'status' => 300,
+        'mensaje' => "Ocurrio un error al editar datos de sucursal",
+      ]);
+    }
 	}
 }
