@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Constants;
+use App\Exceptions\ExceptionHandler;
 use App\Models\Usuario;
+use App\Printers\ESCPOS;
 use App\Services\Data\SucursalServiceData;
 use App\Services\Data\VentaServiceData;
-use App\Utils;
-use App\UtilsTicket;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -18,6 +18,7 @@ use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\CapabilityProfile;
 use Mike42\Escpos\PrintConnectors\FilePrintConnector;
+use NumberFormatter;
 use stdClass;
 use Throwable;
 
@@ -99,7 +100,7 @@ class TicketController extends Controller
       // $printer->setTextSize(1, 1);
       // $printer->text("https://parzibyte.me");
       // $printer->feed(5);
-      
+
       // for ($i=0; $i < 1000; $i++) { 
       //   $printer->text("https://parzibyte.me\n");
       //   $printer->feed();
@@ -111,35 +112,44 @@ class TicketController extends Controller
   {
     try {
       // Obtenemos conexion de impresora
-      $resConexion = UtilsTicket::crearConexionImpresora();
+      $resConexion = ESCPOS::crearConexionImpresora();
       $printer = $resConexion->printer;
-      
+
       // Seteamos encabezado de ticket
-      UtilsTicket::setearEncabezado($printer);
+      ESCPOS::setearEncabezado($printer);
 
       // Obtenemos información de la venta
       $ventaObj = VentaServiceData::obtenerDetalle($id);
+      
+      $printer->setJustification(Printer::JUSTIFY_LEFT);
+      $printer->setFont(Printer::FONT_B);
+      $printer->text("PRODUCTOS\n");
+      $printer->text("\n");
+      // Definir el ancho de las columnas (ajusta según tus necesidades)
+      $columnWidths = [24, 10, 15];
 
       // Definir los encabezados de las columnas
-      $columnHeaders = ["Clave", "Descripción", "Cantidad", "Total"];
-
-      // Definir el ancho de las columnas (ajusta según tus necesidades)
-      $columnWidths = [25, 35, 20, 20];
-
+      $columnHeaders = ["DESC", "CANT", "TOTAL"];
       // Imprimir los encabezados de las columnas
       foreach ($columnHeaders as $key => $header) {
         $printer->text(str_pad($header, $columnWidths[$key]));
       }
-
+      
       $printer->text("\n");
-
       // Imprimir los datos de la tabla
       foreach ($ventaObj->detalles as $rowData) {
+        $productoNombre = $rowData->producto;
+        if(strlen($rowData->producto) > 20) {
+          $productoNombre = substr($productoNombre, 0, 20);
+        }
+        $valorCantidad = floatval($rowData->cantidad);
+        $cantidad = number_format($valorCantidad, 2, '.', ',');
+        $fmt = new NumberFormatter('es_MX', NumberFormatter::CURRENCY);
+        $total = $fmt->formatCurrency($rowData->total, "MXN");
         $datos = [
-          $rowData->clave,
-          $rowData->producto,
-          $rowData->cantidad,
-          $rowData->total,
+          strtoupper($productoNombre),
+          $cantidad,
+          $total,
         ];
         foreach ($datos as $key => $data) {
           $printer->text(str_pad($data, $columnWidths[$key]));
@@ -147,25 +157,36 @@ class TicketController extends Controller
         $printer->text("\n");
       }
 
+      ESCPOS::setearSeparador($printer);
+      
+      $cantidadTotal = number_format($ventaObj->info->cantidad, 2, '.', ',');
+      $ventaTotal = $fmt->formatCurrency($ventaObj->info->total, "MXN");
+      $articulos = "ARTICULOS: " . $cantidadTotal;
+      $totales = "TOTAL: " . $ventaTotal;
+      $columnWidths = [28, 24];
+      $columnHeaders = [$articulos, $totales];
+      foreach ($columnHeaders as $key => $header) {
+        $printer->text(str_pad($header, $columnWidths[$key]));
+      }
+      $printer->text("\n");
+      
+      ESCPOS::setearLeyendaPie($printer);
+
       // Cortar el papel
       $printer->cut();
 
       // Cerrar la conexión con la impresora
       $printer->close();
 
-      // copy($file, "//localhost/PDF24");
-      // unlink($file);
-
-      Log::info("Llego al final");
     } catch (Throwable $th) {
-      throw $th;
+      ExceptionHandler::manejarException($th);
     }
   }
 
   public static function title(Printer $printer, $text)
-      {
-          $printer -> selectPrintMode(Printer::MODE_EMPHASIZED);
-          $printer -> text("\n" . $text);
-          $printer -> selectPrintMode(); // Reset
-      }
+  {
+    $printer->selectPrintMode(Printer::MODE_EMPHASIZED);
+    $printer->text("\n" . $text);
+    $printer->selectPrintMode(); // Reset
+  }
 }
