@@ -49,6 +49,7 @@ Route::middleware('sys')->group(function () {
     Route::get('detalle/{id}', 'ventaDetalleView')->name('ventaDetalle');
     Route::get('/agregar', 'agregarVentaView')->name('agregar.venta');
     Route::post('agregar', 'agregar');
+    Route::post('ticket/{id}', 'imprimirTicket');
   });
   // USUARIOS
   Route::controller(UsuarioController::class)->prefix('usuarios')->group(function () {
