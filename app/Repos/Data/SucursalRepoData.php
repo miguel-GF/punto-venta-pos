@@ -24,7 +24,8 @@ class SucursalRepoData
         's.telefono',
         's.rfc',
         's.status',
-        's.default'
+        's.default',
+        's.ticket_leyenda_pie'
       );
     
     SucursalRH::obtenerFiltrosListarBasico($query, $filtros);
