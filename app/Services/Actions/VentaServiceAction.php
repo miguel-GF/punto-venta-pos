@@ -3,16 +3,17 @@
 namespace App\Services\Actions;
 
 use App\Constants;
+use App\Exceptions\ExceptionHandler;
+use App\Printers\ESCPOS;
 use App\Repos\Actions\ProductoRepoAction;
 use App\Repos\Actions\VentaRepoAction;
 use App\Services\BO\VentaBO;
 use App\Services\Data\ProductoServiceData;
 use App\Services\Data\VentaServiceData;
 use App\UtilsDB;
-use App\UtilsTicket;
+use Mike42\Escpos\Printer;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use stdClass;
+use NumberFormatter;
 use Throwable;
 
 class VentaServiceAction
@@ -54,9 +55,12 @@ class VentaServiceAction
 
       DB::commit();
 
-      // $resTicket = self::imprimirVenta($datos['ventaId']);
+      $exitoTicket = self::imprimirVenta($datos['ventaId']);
 
-      // return $resTicket->status;
+      if (!$exitoTicket) {
+        return 201;
+      }
+
       return 200;
     } catch (Throwable $th) {
       DB::rollBack();
@@ -70,7 +74,7 @@ class VentaServiceAction
    * @param  mixed $datos [productos]
    * @return bool
    */
-  private  static function validarAgregarVenta(array $datos): bool
+  public static function validarAgregarVenta(array $datos): bool
   {
     try {
       $productos = json_decode($datos['productos']);
@@ -93,7 +97,7 @@ class VentaServiceAction
    * @param  mixed $datos [productos]
    * @return bool
    */
-  private  static function validarVentaCompletada(array $datos): bool
+  private static function validarVentaCompletada(array $datos): bool
   {
     try {
       $productos = json_decode($datos['productos']);
@@ -112,40 +116,45 @@ class VentaServiceAction
   public static function imprimirVenta($id)
   {
     try {
-      $res = new stdClass();
-      $res->status = 200;
-      $res->trackError = null;
-
-      // Obtenemos conexion de impresora
-      $resConexion = UtilsTicket::crearConexionImpresora();
-      $printer = $resConexion->printer;
-      
-      // Seteamos encabezado de ticket
-      UtilsTicket::setearEncabezado($printer);
-
       // Obtenemos información de la venta
       $ventaObj = VentaServiceData::obtenerDetalle($id);
 
-      // Definir los encabezados de las columnas
-      $columnHeaders = ["Clave", "Descripción", "Cantidad", "Total"];
+      // Obtenemos conexion de impresora
+      $resConexion = ESCPOS::crearConexionImpresora();
+      $printer = $resConexion->printer;
 
+      // Seteamos encabezado de ticket
+      ESCPOS::setearEncabezado($printer, $ventaObj->info->registro_fecha);
+      
+      $printer->setJustification(Printer::JUSTIFY_LEFT);
+      $printer->setFont(Printer::FONT_B);
+      $printer->text("PRODUCTOS\n");
+      $printer->text("\n");
       // Definir el ancho de las columnas (ajusta según tus necesidades)
-      $columnWidths = [25, 35, 20, 20];
+      $columnWidths = [24, 10, 15];
 
+      // Definir los encabezados de las columnas
+      $columnHeaders = ["DESC", "CANT", "TOTAL"];
       // Imprimir los encabezados de las columnas
       foreach ($columnHeaders as $key => $header) {
         $printer->text(str_pad($header, $columnWidths[$key]));
       }
-
+      
       $printer->text("\n");
-
       // Imprimir los datos de la tabla
       foreach ($ventaObj->detalles as $rowData) {
+        $productoNombre = $rowData->producto;
+        if(strlen($rowData->producto) > 20) {
+          $productoNombre = substr($productoNombre, 0, 20);
+        }
+        $valorCantidad = floatval($rowData->cantidad);
+        $cantidad = number_format($valorCantidad, 2, '.', ',');
+        $fmt = new NumberFormatter('es_MX', NumberFormatter::CURRENCY);
+        $total = $fmt->formatCurrency($rowData->total, "MXN");
         $datos = [
-          $rowData->clave,
-          $rowData->producto,
-          $rowData->cantidad,
-          $rowData->total,
+          strtoupper($productoNombre),
+          $cantidad,
+          $total,
         ];
         foreach ($datos as $key => $data) {
           $printer->text(str_pad($data, $columnWidths[$key]));
@@ -153,22 +162,31 @@ class VentaServiceAction
         $printer->text("\n");
       }
 
+      ESCPOS::setearSeparador($printer);
+      
+      $cantidadTotal = number_format($ventaObj->info->cantidad, 2, '.', ',');
+      $ventaTotal = $fmt->formatCurrency($ventaObj->info->total, "MXN");
+      $articulos = "ARTICULOS: " . $cantidadTotal;
+      $totales = "TOTAL: " . $ventaTotal;
+      $columnWidths = [28, 24];
+      $columnHeaders = [$articulos, $totales];
+      foreach ($columnHeaders as $key => $header) {
+        $printer->text(str_pad($header, $columnWidths[$key]));
+      }
+      $printer->text("\n");
+      
+      ESCPOS::setearLeyendaPie($printer);
+
       // Cortar el papel
       $printer->cut();
 
       // Cerrar la conexión con la impresora
       $printer->close();
-
-      // copy($file, "//localhost/PDF24");
-      // unlink($file);
-
-      Log::info("Llego al final");
-      return $res;
-    } catch (Throwable $th) {
       
-      $res->status = 303;
-      $res->trackError = $th;
-      return $res;
+      return true;
+    } catch (Throwable $th) {
+      ExceptionHandler::manejarException($th);
+      return false;
     }
   }
 }

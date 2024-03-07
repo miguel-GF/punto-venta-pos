@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Constants;
+use App\Exceptions\ExceptionHandler;
 use App\Http\Requests\VentaRequest;
 use App\Models\Usuario;
 use App\OrderConstants;
@@ -12,7 +13,6 @@ use App\Services\Data\ProductoServiceData;
 use App\Services\Data\VentaServiceData;
 use App\Utils;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Throwable;
@@ -39,11 +39,8 @@ class VentaController extends Controller
 				'productos' => $productos,
 				'clientes' => $clientes,
 			]);
-		} catch (QueryException $qe) {
-			Log::error($qe);
-			throw $qe;
 		} catch (Throwable $th) {
-			Log::error($th);
+			ExceptionHandler::manejarException($th);
 			throw $th;
 		}
 	}
@@ -54,9 +51,6 @@ class VentaController extends Controller
 			$datos = $request->all();
       $res = VentaServiceAction::agregar($datos);
 
-      Log::info('ya en controller');
-      Log::info($res);
-
       switch ($res) {
         case 301:
         case 302:
@@ -64,7 +58,7 @@ class VentaController extends Controller
           $status = $res;
           break;
 
-        case 303:
+        case 201:
           $mensaje = 'Venta agregada correctamente pero no se pudo imprimir el ticket de la venta';
           $status = 201;
           break;
@@ -82,6 +76,31 @@ class VentaController extends Controller
 			Log::error($th);
 			response([
 				'mensaje' => 'Ocurrió un error al agregar una nueva venta',
+				'status' => 300
+			], 300);
+		}
+	}
+
+  public function imprimirTicket($ventaId)
+	{
+		try {
+      $exito = VentaServiceAction::imprimirVenta($ventaId);
+      if ($exito) {
+        return response([
+          'mensaje' => "Ticket de venta impreso correctamente",
+          'status' => 200
+        ]);
+      }
+			if ($exito) {
+        return response([
+          'mensaje' => "No se pudo imprimir ticket de venta",
+          'status' => 300
+        ]);
+      }
+		} catch (Throwable $th) {
+			ExceptionHandler::manejarException($th);
+			response([
+				'mensaje' => 'Ocurrió un error al imprimir ticket de venta',
 				'status' => 300
 			], 300);
 		}
@@ -106,11 +125,8 @@ class VentaController extends Controller
 				'usuario' => $user,
 				'ventas' => $ventas,
 			]);
-		} catch (QueryException $qe) {
-			Log::error($qe);
-			throw $qe;
 		} catch (Throwable $th) {
-			Log::error($th);
+			ExceptionHandler::manejarException($th);
 			throw $th;
 		}
 	}
@@ -128,11 +144,8 @@ class VentaController extends Controller
 				'ventaDetalle' => $detalle->detalles,
 			]);
 
-		} catch (QueryException $qe) {
-			Log::error($qe);
-			throw $qe;
 		} catch (Throwable $th) {
-			Log::error($th);
+			ExceptionHandler::manejarException($th);
 			throw $th;
 		}
 	}
