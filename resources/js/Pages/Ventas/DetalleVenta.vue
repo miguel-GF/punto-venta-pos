@@ -4,9 +4,14 @@
       <q-card class="q-pa-md full-height">
         <div class="row col-12 justify-between q-mb-md">
           <div class="text-h6">Detalle de Venta - {{ venta.serie_folio || '--' }}</div>
-          <q-btn @click="regresar()" dense icon-right="chevron_left" color="secondary">
-            <div class="q-px-sm">Regresar</div>
-          </q-btn>
+          <div class="q-my-auto">
+            <q-btn @click="regresar()" dense icon="chevron_left" color="secondary" class="q-mr-md">
+              <div class="q-px-sm">Regresar</div>
+            </q-btn>
+            <q-btn @click="imprimirTicket()" dense icon-right="las la-print" color="info">
+              <div class="q-px-sm">Imprimir Ticket</div>
+            </q-btn>
+          </div>
         </div>
         <div class="row col-12 justify-between q-mb-md">
           <q-markup-table flat class="striped-table col-12" dense>
@@ -51,6 +56,7 @@
 import MainLayout from '../../Layouts/MainLayout.vue';
 import { formatearNumero } from '../../Utils/format';
 import { loading } from '../../Utils/loading';
+import { notify } from '../../Utils/notify';
 import { obtenerFechaHoraLeible } from '../../Utils/date';
 export default {
   name: "ListadoVentas",
@@ -88,7 +94,7 @@ export default {
           name: 'cantidad',
           label: 'Precio U.',
           align: 'right',
-          field: row => row.cantidad,
+          field: row => row.precio_unitario,
           format: val => formatearNumero(val, 'currency'),
           sortable: true
         },
@@ -124,7 +130,28 @@ export default {
     },
     obtenerFecha(val) {
       return obtenerFechaHoraLeible(val);
-    }
+    },
+    async imprimirTicket() {
+      try {
+        loading(true, 'Imprimiendo ticket...');
+        const res = await axios.post("/ventas/ticket/" + this.venta.venta_id);
+        const { data, status, statusText } = res;
+        if (Number(status) != 200) {
+          throw `Ocurrio un error al hacer la solicitud: ${statusText || '--'}`;
+        }
+        if (!data) {
+          throw "Ocurrio un error al imprimir ticket de venta";
+        }
+        if (data.status != 200) {
+          throw data.mensaje;
+        }
+        loading(false);
+        notify(data.mensaje, 'exito');
+      } catch (error) {
+        loading(false);
+        notify(error, 'error');
+      }
+    },
   }
 };
 </script>
