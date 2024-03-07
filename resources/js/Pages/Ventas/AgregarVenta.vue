@@ -5,7 +5,7 @@
         <div class="row col-12 justify-between q-mb-md">
           <div class="text-h4">Agregar Nueva Venta</div>
           <div class="q-my-auto">
-            <q-btn @click="regresar()" dense icon-right="chevron_left" color="secondary"
+            <q-btn @click="regresar()" dense icon="chevron_left" color="secondary"
               class="q-mr-md"
             >
               <div class="q-px-sm">Regresar</div>
@@ -367,7 +367,7 @@ export default {
         if (Number(status) != 200) {
           throw `Ocurrio un error al hacer la solicitud: ${statusText || '--'}`;
         }
-        if (data.status != 200) {
+        if (data.status >= 300) {
           throw data.mensaje;
         }
         loading(false);

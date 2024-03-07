@@ -5,7 +5,7 @@
         <div class="row col-12 justify-between q-mb-md">
           <div class="text-h4">Agregar Movimiento Inventario</div>
           <div class="q-my-auto">
-            <q-btn @click="regresar()" dense icon-right="chevron_left" color="secondary"
+            <q-btn @click="regresar()" dense icon="chevron_left" color="secondary"
               class="q-mr-md"
             >
               <div class="q-px-sm">Regresar</div>
