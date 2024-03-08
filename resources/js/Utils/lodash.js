@@ -1,3 +1,3 @@
-import { sample } from "lodash";
+import { sample, isEmpty, sortBy } from "lodash";
 
-export { sample };
+export { sample, isEmpty, sortBy };
