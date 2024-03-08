@@ -134,7 +134,7 @@ class VentaServiceAction
       $columnWidths = [24, 10, 15];
 
       // Definir los encabezados de las columnas
-      $columnHeaders = ["DESC", "CANT", "TOTAL"];
+      $columnHeaders = ["DESC", "CANT", "PREC U."];
       // Imprimir los encabezados de las columnas
       foreach ($columnHeaders as $key => $header) {
         $printer->text(str_pad($header, $columnWidths[$key]));
@@ -151,15 +151,18 @@ class VentaServiceAction
         $cantidad = number_format($valorCantidad, 2, '.', ',');
         $fmt = new NumberFormatter('es_MX', NumberFormatter::CURRENCY);
         $total = $fmt->formatCurrency($rowData->total, "MXN");
+        $precioUnitario = $fmt->formatCurrency($rowData->precio_unitario, "MXN");
         $datos = [
           strtoupper($productoNombre),
           $cantidad,
-          $total,
+          $precioUnitario,
+          // $total,
         ];
         foreach ($datos as $key => $data) {
           $printer->text(str_pad($data, $columnWidths[$key]));
         }
-        $printer->text("\n");
+        $printer->text(str_pad("PREC. T.", 27, " ", STR_PAD_LEFT));
+        $printer->text("      $total\n\n");
       }
 
       ESCPOS::setearSeparador($printer);
