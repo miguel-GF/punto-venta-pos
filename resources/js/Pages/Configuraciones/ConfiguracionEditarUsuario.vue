@@ -36,11 +36,12 @@
                     dense
                     checked-icon="check"
                     unchecked-icon="clear"
+                    ref="lectorToogle"
                   />
                 </div>
               </div>
               <div>
-                <q-banner dense :class="obtenerClass" class="rounded-borders q-pa-sm q-mb-md">
+                <q-banner dense :class="obtenerClassLector" class="rounded-borders q-pa-sm q-mb-md">
                   <template v-slot:avatar>
                     <div class="q-my-auto">
                       <q-icon name="info" size="xs" />
@@ -48,6 +49,52 @@
                   </template>
                   {{ mensajeBanner || '--' }}
                 </q-banner>
+              </div>
+            </div>
+            <div class="q-mb-md col-8">
+              <div class="text-h6 text-grey-9 text-left fs-italic">Impresora</div>
+              <q-separator />
+            </div>
+            <div class="q-mb-lg col-8">
+              <div class="q-mb-xs row">
+                <div class="q-pr-md">
+                  <label>Impresora Predeterminada</label>
+                </div>
+                <div>
+                  <q-toggle
+                    :label="form.impresoraPredeterminada ?  'Si' : 'No'"
+                    v-model="form.impresoraPredeterminada"
+                    dense
+                    checked-icon="check"
+                    unchecked-icon="clear"
+                    ref="lectorToogle"
+                  />
+                </div>
+              </div>
+              <div>
+                <q-banner dense :class="obtenerClassImpresora" class="rounded-borders q-pa-sm q-mb-md">
+                  <template v-slot:avatar>
+                    <div class="q-my-auto">
+                      <q-icon name="info" size="xs" />
+                    </div>
+                  </template>
+                  {{ mensajeImpresora || '--' }}
+                </q-banner>
+              </div>
+              <div class="q-mb-lg">
+                <q-select
+                  :options="impresorasOpciones"
+                  v-model="form.impresoraNombre"
+                  dense
+                  outlined
+                  emit-value
+                  :disable="form.impresoraPredeterminada"
+                  :rules="[val => form.impresoraPredeterminada ? [] : validarSeleccionImpresora(val)]"
+                >
+                  <template #selected v-if="!form.impresoraNombre">
+                    Selecciona una opción
+                  </template>
+                </q-select>
               </div>
             </div>
             <!-- BTN GUARDAR -->
@@ -74,26 +121,31 @@ import MainLayout from '../../Layouts/MainLayout.vue';
 import { loading } from '../../Utils/loading';
 import { notify } from '../../Utils/notify';
 import { obtenerFechaHoraActualOperacion } from '../../Utils/date';
+import { isEmpty, sortBy } from '../../Utils/lodash';
 export default {
   name: "EditarUsuario",
-  props: ["usuarioConfiguracion", "status", "mensaje"],
+  props: ["usuarioConfiguracion", "impresoras", "status", "mensaje"],
   components: { MainLayout },
   data() {
     return {
       form: {
         lecturaCompleta: true,
+        impresoraPredeterminada: true,
+        impresoraNombre: "",
       },
       isPwd: true,
       editarPassword: false,
       mostrarModalExito: false,
       mensajeConfirmacion: "",
       mensajeBanner: "",
+      mensajeImpresora: "",
+      impresorasOpciones: [],
     }
   },
   created() {
     if (this.usuarioConfiguracion && !this.status) {
       this.llenarDatosForm();
-      this.$nextTick(() => this.$refs.nombreInput.focus());
+      this.$nextTick(() => this.$refs.lectorToogle.$el.focus());
     }
     loading(false);
   },
@@ -107,7 +159,7 @@ export default {
     }
   },
   computed: {
-    obtenerClass() {
+    obtenerClassLector() {
       if (!this.form.lecturaCompleta) {
         this.mensajeBanner = 'La lectura del código de barras será completo.';
         return 'bg-blue-5 text-white';
@@ -117,12 +169,32 @@ export default {
         return 'bg-green-5';
       }
     },
+    obtenerClassImpresora() {
+      if (!this.form.impresoraPredeterminada) {
+        this.mensajeImpresora = 'Debe seleccionar una impresora de la lista de abajo, la cual utilizará para la impresión de tickets.';
+        return 'bg-blue-5 text-white';
+      }
+      else {
+        this.mensajeImpresora = 'La impresora utilizada será la predeterminada del sistema para la impresión de tickets.';
+        return 'bg-green-5';
+      }
+    },
   },
   methods: {
     llenarDatosForm() {
-      const { lectura_modo_monitor } = this.usuarioConfiguracion;
+      this.impresorasOpciones = [];
+      if (!isEmpty(this.impresoras)) {
+        this.impresoras.forEach(impresora => this.impresorasOpciones.push({
+          label: impresora,
+          value: impresora
+        }));
+        this.impresorasOpciones = sortBy(this.impresorasOpciones, ['label']);
+      }
+      const { lectura_modo_monitor, impresora_predeterminada, impresora_nombre } = this.usuarioConfiguracion;
       this.form = {
         lecturaCompleta: lectura_modo_monitor ? true : false,
+        impresoraPredeterminada: impresora_predeterminada ? true: false,
+        impresoraNombre: impresora_nombre,
       };
     },
     regresar() {
@@ -134,8 +206,16 @@ export default {
       const form = {
         lecturaCompleta: this.form.lecturaCompleta ? 'si' : 'no',
         fechaActual: obtenerFechaHoraActualOperacion(),
+        impresoraPredeterminada: this.form.impresoraPredeterminada ? 'si' : 'no',
+        impresoraNombre: !this.form.impresoraPredeterminada ? this.form.impresoraNombre : null,
       };
       this.$inertia.post("/configuraciones/usuario", form);
+    },
+    validarSeleccionImpresora(val) {
+      if (isEmpty(val)) {
+        return "Debe seleccionar una impresora";
+      }
+      return true;
     },
   }
 };

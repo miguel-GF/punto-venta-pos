@@ -26,6 +26,8 @@ class ConfiguracionServiceAction
       $usuario = Usuario::find(Utils::getUserId());
 
       $usuario->lectura_modo_monitor = $datos['lecturaCompleta'] == 'si' ? true: false;
+      $usuario->impresora_predeterminada = $datos['impresoraPredeterminada'] == 'si' ? true : false;
+      $usuario->impresora_nombre = $datos['impresoraPredeterminada'] == 'si' ? null : $datos['impresoraNombre'];
       $usuario->actualizacion_autor_id = Utils::getUserId();
       $usuario->actualizacion_fecha = $datos['fechaActual'];
 
@@ -34,7 +36,7 @@ class ConfiguracionServiceAction
       DB::commit();
 
       return true;
-    } catch (\Throwable $th) {
+    } catch (Throwable $th) {
       DB::rollBack();
       throw $th;
     }

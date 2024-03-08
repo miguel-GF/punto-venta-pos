@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constants;
 use App\Exceptions\ExceptionHandler;
+use App\Helpers\HelperPrinter;
 use App\Models\Usuario;
 use App\Services\Actions\ConfiguracionServiceAction;
 use App\Services\Data\SucursalServiceData;
@@ -18,9 +19,11 @@ class ConfiguracionController extends Controller
 	{
 		$user = Utils::getUser();
     $usuarioConfiguracion = Usuario::find(Utils::getUserId());
+    $impresoras = HelperPrinter::obtenerListadoImpresoras();
 		return Inertia::render('Configuraciones/ConfiguracionEditarUsuario', [
 			'usuario' => $user,
       'usuarioConfiguracion' => $usuarioConfiguracion,
+      'impresoras' => $impresoras,
 		]);
 	}
 
@@ -29,6 +32,8 @@ class ConfiguracionController extends Controller
 		$request->validate([
 			'lecturaCompleta' => 'required',
 			'fechaActual' => 'required',
+			'impresoraPredeterminada' => 'required',
+			'impresoraNombre' => 'nullable',
 		]);
 
 		$datos = $request->all();
@@ -44,9 +49,11 @@ class ConfiguracionController extends Controller
 
 		$user = Utils::getUser();
     $usuarioConfiguracion = Usuario::find(Utils::getUserId());
+    $impresoras = HelperPrinter::obtenerListadoImpresoras();
 		return Inertia::render('Configuraciones/ConfiguracionEditarUsuario', [
 			'usuario' => $user,
       'usuarioConfiguracion' => $usuarioConfiguracion,
+      'impresoras' => $impresoras,
       'status' => $status,
       'mensaje' => $mensaje,
 		]);
