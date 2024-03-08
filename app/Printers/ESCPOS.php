@@ -31,6 +31,9 @@ class ESCPOS
           throw new PrinterException("No hay impresora predeterminada configurada");
         }
       } else {
+        if (!$usuarioSesion->impresora_nombre) {
+          throw new PrinterException("No hay impresora configurada por el usuario");
+        }
         $defaultPrinter->existePredeterminada = false;
         $defaultPrinter->impresoraPredeterminada = $usuarioSesion->impresora_nombre;
       }
