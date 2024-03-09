@@ -24,6 +24,8 @@ class ESCPOS
       $usuarioId = Utils::getUserId();
       $usuarioSesion = Usuario::find($usuarioId);
       $defaultPrinter = new stdClass();
+      $usuarioSesion->impresora_predeterminada = false;
+      $usuarioSesion->impresora_nombre = "MINIPRINTER";
 
       if ($usuarioSesion->impresora_predeterminada) {
         $defaultPrinter = self::obtenerImpresoraPredeterminada();
