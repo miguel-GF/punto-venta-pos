@@ -58,10 +58,10 @@ class VentaController extends Controller
           $status = $res;
           break;
 
-        case 201:
-          $mensaje = 'Venta agregada correctamente pero no se pudo imprimir el ticket de la venta';
-          $status = 201;
-          break;
+        // case 201:
+        //   $mensaje = 'Venta agregada correctamente pero no se pudo imprimir el ticket de la venta';
+        //   $status = 201;
+        //   break;
         
         default:
           $mensaje = 'Venta agregada correctamente';
@@ -70,7 +70,8 @@ class VentaController extends Controller
       }
       return response([
         'mensaje' => $mensaje,
-        'status' => $status
+        'status' => $status,
+        'archivo' => $res,
       ]);
 		} catch (Throwable $th) {
 			Log::error($th);
@@ -78,7 +79,11 @@ class VentaController extends Controller
 				'mensaje' => 'Ocurrió un error al agregar una nueva venta',
 				'status' => 300
 			], 300);
-		}
+		} finally {
+      if (file_exists(public_path($res))) {
+        unlink(public_path($res));
+      }
+    }
 	}
 
   public function imprimirTicket($ventaId)

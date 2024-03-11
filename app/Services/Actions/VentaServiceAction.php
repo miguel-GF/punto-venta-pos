@@ -4,11 +4,14 @@ namespace App\Services\Actions;
 
 use App\Constants;
 use App\Exceptions\ExceptionHandler;
+use App\Models\VentaArchivo;
+use App\Pdfs\TicketVentaPDF;
 use App\Printers\ESCPOS;
 use App\Repos\Actions\ProductoRepoAction;
 use App\Repos\Actions\VentaRepoAction;
 use App\Services\BO\VentaBO;
 use App\Services\Data\ProductoServiceData;
+use App\Services\Data\SucursalServiceData;
 use App\Services\Data\VentaServiceData;
 use App\UtilsDB;
 use Mike42\Escpos\Printer;
@@ -53,15 +56,18 @@ class VentaServiceAction
         return 302;
       }
 
+      self::crearPdfTicket($datos['ventaId']);
+      $archivo = self::obtenerVentaPdf($datos['ventaId']);
+
       DB::commit();
 
-      $exitoTicket = self::imprimirVenta($datos['ventaId']);
+      // $exitoTicket = self::imprimirVenta($datos['ventaId']);
 
-      if (!$exitoTicket) {
-        return 201;
-      }
+      // if (!$exitoTicket) {
+      //   return 201;
+      // } 
 
-      return 200;
+      return $archivo;
     } catch (Throwable $th) {
       DB::rollBack();
       throw $th;
@@ -185,11 +191,53 @@ class VentaServiceAction
 
       // Cerrar la conexión con la impresora
       $printer->close();
-      
+
       return true;
     } catch (Throwable $th) {
       ExceptionHandler::manejarException($th);
       return false;
     }
+  }
+
+  private static function crearPdfTicket($id)
+  {
+    // Obtenemos información de la venta
+    $ventaObj = VentaServiceData::obtenerDetalle($id);
+    // Información de la sucursal
+    $sucursalDefault = SucursalServiceData::listarBasico([
+      'status' => Constants::ACTIVO_STATUS,
+      'default' => 1
+    ])[0];
+
+    // Crear instancia de la clase FPDF
+    $pdf = new TicketVentaPDF($sucursalDefault);
+    $pdf->SetMargins(3, 10, 3);
+    $pdf->AddPage('P', array(80,258));
+
+    $pdf->contenido($ventaObj);
+
+    $archivo = strtoupper($ventaObj->info->serie_folio) . ".pdf";
+    $pdf->Output(public_path($archivo), 'F');
+    $pdfContent = file_get_contents(public_path($archivo));
+
+    $pdfModel = new VentaArchivo();
+    $pdfModel->venta_id = $ventaObj->info->venta_id;
+    $pdfModel->archivo = $pdfContent;
+    $pdfModel->nombre = $archivo;
+    $pdfModel->extension = "pdf";
+    $pdfModel->registro_fecha = $ventaObj->info->registro_fecha;
+    $pdfModel->save();
+  }
+
+  private static function obtenerVentaPdf($ventaId)
+  {
+    $ventaArchivoPdf = DB::table('ventas_archivos')->select('*')
+      ->where('venta_id', $ventaId)
+      ->where('status', Constants::ACTIVO_STATUS)
+      ->get()->first();
+    $pdfContent = $ventaArchivoPdf->archivo;
+    $filePath = public_path($ventaArchivoPdf->nombre);
+    file_put_contents($filePath, $pdfContent);
+    return $ventaArchivoPdf->nombre;
   }
 }
