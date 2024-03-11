@@ -68,7 +68,6 @@
                     checked-icon="check"
                     unchecked-icon="clear"
                     ref="lectorToogle"
-                    disable
                   />
                 </div>
               </div>
@@ -89,10 +88,9 @@
                   dense
                   outlined
                   emit-value
-                  disable
-                  >
-                  <!-- :disable="form.impresoraPredeterminada"c
-                  :rules="[val => form.impresoraPredeterminada ? [] : validarSeleccionImpresora(val)]" -->
+                  :disable="form.impresoraPredeterminada"
+                  :rules="[val => form.impresoraPredeterminada ? [] : validarSeleccionImpresora(val)]"
+                >
                   <template #selected v-if="!form.impresoraNombre">
                     Selecciona una opción
                   </template>
@@ -132,7 +130,7 @@ export default {
     return {
       form: {
         lecturaCompleta: true,
-        impresoraPredeterminada: false,
+        impresoraPredeterminada: true,
         impresoraNombre: "",
       },
       isPwd: true,
@@ -195,10 +193,8 @@ export default {
       const { lectura_modo_monitor, impresora_predeterminada, impresora_nombre } = this.usuarioConfiguracion;
       this.form = {
         lecturaCompleta: lectura_modo_monitor ? true : false,
-        // impresoraPredeterminada: impresora_predeterminada ? true: false,
-        // impresoraNombre: impresora_nombre,
-        impresoraPredeterminada: false,
-        impresoraNombre: null,
+        impresoraPredeterminada: impresora_predeterminada ? true: false,
+        impresoraNombre: impresora_nombre,
       };
     },
     regresar() {
