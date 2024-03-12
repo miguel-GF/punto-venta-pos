@@ -50,6 +50,7 @@ Route::middleware('sys')->group(function () {
     Route::get('/agregar', 'agregarVentaView')->name('agregar.venta');
     Route::post('agregar', 'agregar');
     // Route::post('ticket/{id}', 'imprimirTicket');
+    // Route::get('crearPdf/{id}', 'crearRegistroPdf');
   });
   // USUARIOS
   Route::controller(UsuarioController::class)->prefix('usuarios')->group(function () {

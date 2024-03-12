@@ -204,7 +204,7 @@ class VentaServiceAction
     }
   }
 
-  private static function crearPdfTicket($id)
+  public static function crearPdfTicket($id)
   {
     // Obtenemos información de la venta
     $ventaObj = VentaServiceData::obtenerDetalle($id);

@@ -163,4 +163,23 @@ class VentaController extends Controller
       }
     }
 	}
+
+  public function crearRegistroPdf($ventaId)
+	{
+		try {
+      VentaServiceAction::crearPdfTicket($ventaId);
+      $res = VentaServiceData::obtenerArchivoPdf($ventaId);
+      echo "exito";
+		} catch (Throwable $th) {
+			ExceptionHandler::manejarException($th);
+			response([
+				'mensaje' => 'Ocurrió un al crear registro de ticket',
+				'status' => 300
+			], 300);
+		} finally {
+      if (file_exists(public_path($res->nombre))) {
+        unlink(public_path($res->nombre));
+      }
+    }
+	}
 }
