@@ -4,6 +4,7 @@ namespace App\Services\Actions;
 
 use App\Constants;
 use App\Exceptions\ExceptionHandler;
+use App\Models\MovimientoInventario;
 use App\Models\VentaArchivo;
 use App\Pdfs\TicketVentaPDF;
 use App\Printers\ESCPOS;
@@ -13,6 +14,7 @@ use App\Services\BO\VentaBO;
 use App\Services\Data\ProductoServiceData;
 use App\Services\Data\SucursalServiceData;
 use App\Services\Data\VentaServiceData;
+use App\Utils;
 use App\UtilsDB;
 use Mike42\Escpos\Printer;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +53,17 @@ class VentaServiceAction
         $insertDetalle = VentaBO::armarInsertVentaDetalle($datos, $producto);
         array_push($detalles, $insertDetalle);
         ProductoRepoAction::actualizarStock($datos, $producto);
+
+        // Se agrega movimiento de inventario
+        $movimientoInventario = new MovimientoInventario([
+          'producto_id' => $producto->producto_id,
+          'tipo' => Constants::SALIDA_MOVIMIENTO_INVENTARIO_TIPO,
+          'cantidad' => $producto->cantidad * -1,
+          'registro_autor_id' => Utils::getUserId(),
+          'registro_fecha' => $datos['fechaActual'],
+          'venta_id' => $datos['ventaId'],
+        ]);
+        $movimientoInventario->save();
       }
       VentaRepoAction::agregarDetalle($detalles);
 
