@@ -47,15 +47,16 @@ class VentaController extends Controller
 
 	public function agregar(VentaRequest $request)
 	{
+    $nombreArchivo = "";
 		try {
 			$datos = $request->all();
       $res = VentaServiceAction::agregar($datos);
+      $status = $res->status;
 
-      switch ($res) {
+      switch ($status) {
         case 301:
         case 302:
           $mensaje = 'No cuenta con el stock suficiente para completar la venta';
-          $status = $res;
           break;
 
         // case 201:
@@ -68,10 +69,12 @@ class VentaController extends Controller
           $status = 200;
           break;
       }
+
+      $nombreArchivo = $res->nombre;
       return response([
         'mensaje' => $mensaje,
         'status' => $status,
-        'archivo' => $res,
+        'archivo' => $res->base64,
       ]);
 		} catch (Throwable $th) {
 			Log::error($th);
@@ -80,8 +83,8 @@ class VentaController extends Controller
 				'status' => 300
 			], 300);
 		} finally {
-      if (file_exists(public_path($res))) {
-        unlink(public_path($res));
+      if (file_exists(public_path($nombreArchivo))) {
+        unlink(public_path($nombreArchivo));
       }
     }
 	}
@@ -142,16 +145,22 @@ class VentaController extends Controller
 			$user = Utils::getUser();
 
       $detalle = VentaServiceData::obtenerDetalle($id);
+      $res = VentaServiceData::obtenerArchivoPdf($id);
 
 			return Inertia::render('Ventas/DetalleVenta', [
 				'usuario' => $user,
 				'venta' => $detalle->info,
 				'ventaDetalle' => $detalle->detalles,
+				'base64' => $res->base64,
 			]);
 
 		} catch (Throwable $th) {
 			ExceptionHandler::manejarException($th);
 			throw $th;
-		}
+		} finally {
+      if (file_exists(public_path($res->nombre))) {
+        unlink(public_path($res->nombre));
+      }
+    }
 	}
 }

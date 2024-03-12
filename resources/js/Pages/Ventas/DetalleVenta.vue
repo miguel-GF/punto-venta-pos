@@ -8,8 +8,8 @@
             <q-btn @click="regresar()" dense icon="chevron_left" color="secondary" class="q-mr-md">
               <div class="q-px-sm">Regresar</div>
             </q-btn>
-            <q-btn @click="imprimirTicket()" dense icon-right="las la-print" color="info">
-              <div class="q-px-sm">Imprimir Ticket</div>
+            <q-btn @click="imprimirTicket()" dense icon-right="las la-receipt" color="info">
+              <div class="q-px-sm">Ver Ticket</div>
             </q-btn>
           </div>
         </div>
@@ -49,19 +49,29 @@
         </q-table>
       </q-card>
     </div>
+    <ticket-venta-modal
+      :mostrar="mostrarTicket"
+      :ventaObj="venta"
+      :base64="base64"
+      @aceptar="mostrarTicket = false" 
+    />
   </MainLayout>
 </template>
 
 <script>
 import MainLayout from '../../Layouts/MainLayout.vue';
+import TicketVentaModal from './componentes/TicketVentaModal.vue';
 import { formatearNumero } from '../../Utils/format';
 import { loading } from '../../Utils/loading';
 import { notify } from '../../Utils/notify';
 import { obtenerFechaHoraLeible } from '../../Utils/date';
 export default {
   name: "ListadoVentas",
-  props: ["venta", "status", "mensaje", "ventaDetalle"],
-  components: { MainLayout },
+  props: ["venta", "status", "mensaje", "ventaDetalle", "base64"],
+  components: { 
+    MainLayout,
+    TicketVentaModal,
+  },
   data() {
     return {
       filter: "",
@@ -107,6 +117,7 @@ export default {
           sortable: true
         },
       ],
+      mostrarTicket: false,
     }
   },
   created() {
@@ -131,27 +142,30 @@ export default {
     obtenerFecha(val) {
       return obtenerFechaHoraLeible(val);
     },
-    async imprimirTicket() {
-      try {
-        loading(true, 'Imprimiendo ticket...');
-        const res = await axios.post("/ventas/ticket/" + this.venta.venta_id);
-        const { data, status, statusText } = res;
-        if (Number(status) != 200) {
-          throw `Ocurrio un error al hacer la solicitud: ${statusText || '--'}`;
-        }
-        if (!data) {
-          throw "Ocurrio un error al imprimir ticket de venta";
-        }
-        if (data.status != 200) {
-          throw data.mensaje;
-        }
-        loading(false);
-        notify(data.mensaje, 'exito');
-      } catch (error) {
-        loading(false);
-        notify(error, 'error');
-      }
-    },
+    // async imprimirTicketESCPOS() {
+    //   try {
+    //     loading(true, 'Imprimiendo ticket...');
+    //     const res = await axios.post("/ventas/ticket/" + this.venta.venta_id);
+    //     const { data, status, statusText } = res;
+    //     if (Number(status) != 200) {
+    //       throw `Ocurrio un error al hacer la solicitud: ${statusText || '--'}`;
+    //     }
+    //     if (!data) {
+    //       throw "Ocurrio un error al imprimir ticket de venta";
+    //     }
+    //     if (data.status != 200) {
+    //       throw data.mensaje;
+    //     }
+    //     loading(false);
+    //     notify(data.mensaje, 'exito');
+    //   } catch (error) {
+    //     loading(false);
+    //     notify(error, 'error');
+    //   }
+    // },
+    imprimirTicket() {
+      this.mostrarTicket = true;
+    }
   }
 };
 </script>

@@ -141,8 +141,18 @@
     <the-dialog-response
       :mostrar="mostrarModalExito"
       :mensaje="mensajeExito"
+      classesCard="card-width-450"
       @aceptar="mostrarModalExito = false, limpiar()"
-    />
+    >
+      <template #body>
+        <div class="text-center q-mt-sm">
+          <iframe
+            width="380" height="400" :src="'data:application/pdf;base64,'+ventaPdf" frameborder="0"
+          >
+          </iframe>
+        </div>
+      </template>
+    </the-dialog-response>
 
     <!-- DIALOGO DE BUSQUEDAS DE PRODUCTOS -->
     <productos-seleccion-modal
@@ -172,6 +182,7 @@ export default {
         totalVenta: 0,
         numeroProductos: 0,
       },
+      ventaPdf: null,
       mostrarModalConfirmar: false,
       mostrarModalExito: false,
       mostrarModalBusquedaProductos: false,
@@ -373,6 +384,7 @@ export default {
         loading(false);
         this.mensajeExito = data.mensaje;
         this.mostrarModalConfirmar = false;
+        this.ventaPdf = data.archivo;
         this.mostrarModalExito = true;
       } catch (error) {
         loading(false);

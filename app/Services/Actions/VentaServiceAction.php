@@ -17,6 +17,7 @@ use App\UtilsDB;
 use Mike42\Escpos\Printer;
 use Illuminate\Support\Facades\DB;
 use NumberFormatter;
+use stdClass;
 use Throwable;
 
 class VentaServiceAction
@@ -27,16 +28,18 @@ class VentaServiceAction
    * @param  mixed $datos [clienteId, productos, totalVenta, numeroProductos, fechaActual]
    * @return mixed
    */
-  public static function agregar(array $datos): mixed
+  public static function agregar(array $datos)
   {
     try {
       DB::beginTransaction();
+      $res = new stdClass();
       
       $datos['folio'] = UtilsDB::obtenerFolioGlobalForUpdate(Constants::CAT_FOLIO_GLOBAL_VENTA);
 
       $validar = self::validarAgregarVenta($datos);
       if (!$validar) {
-        return 301;
+        $res->status = 301;
+        return $res;
       }
 
       $insert = VentaBO::armarInsertVenta($datos);
@@ -53,11 +56,13 @@ class VentaServiceAction
 
       $validar = self::validarVentaCompletada($datos);
       if (!$validar) {
-        return 302;
+        $res->status = 302;
+        return $res;
       }
 
       self::crearPdfTicket($datos['ventaId']);
-      $archivo = self::obtenerVentaPdf($datos['ventaId']);
+      $res = VentaServiceData::obtenerArchivoPdf($datos['ventaId']);
+      $res->status = 200;
 
       DB::commit();
 
@@ -65,9 +70,9 @@ class VentaServiceAction
 
       // if (!$exitoTicket) {
       //   return 201;
-      // } 
+      // }
 
-      return $archivo;
+      return $res;
     } catch (Throwable $th) {
       DB::rollBack();
       throw $th;
@@ -227,17 +232,5 @@ class VentaServiceAction
     $pdfModel->extension = "pdf";
     $pdfModel->registro_fecha = $ventaObj->info->registro_fecha;
     $pdfModel->save();
-  }
-
-  private static function obtenerVentaPdf($ventaId)
-  {
-    $ventaArchivoPdf = DB::table('ventas_archivos')->select('*')
-      ->where('venta_id', $ventaId)
-      ->where('status', Constants::ACTIVO_STATUS)
-      ->get()->first();
-    $pdfContent = $ventaArchivoPdf->archivo;
-    $filePath = public_path($ventaArchivoPdf->nombre);
-    file_put_contents($filePath, $pdfContent);
-    return $ventaArchivoPdf->nombre;
   }
 }

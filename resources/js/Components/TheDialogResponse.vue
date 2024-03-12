@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="mostrar" persistent @show="onShow()">
-    <q-card class="card-width q-pb-md">
+    <q-card class="q-pb-md" :class="classesCard">
       <q-card-section class="row justify-center">
         <div class="text-h6 ellipsis">{{ titulo }}</div>
       </q-card-section>
@@ -14,6 +14,7 @@
           </template>
         </div>
         <div class="text-center" v-html="mensaje"></div>
+        <slot name="body"></slot>
       </q-card-section>
 
       <q-card-actions align="center">
@@ -42,6 +43,10 @@ export default {
       type: String,
       default: 'exito',
     },
+    classesCard: {
+      type: String,
+      default: 'card-width',
+    },
   },
   methods: {
     aceptar() {
@@ -56,7 +61,11 @@ export default {
 
 <style scoped>
 .card-width {
-  width: 350px;
+  width: 350px !important;
+}
+
+.card-width-450 {
+  width: 450px !important;
 }
 
 .card-body-height {
