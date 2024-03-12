@@ -144,18 +144,18 @@ export default {
       impresorasOpciones: [],
     }
   },
-  created() {
+  async created() {
     if (this.usuarioConfiguracion && !this.status) {
-      this.llenarDatosForm();
+      await this.llenarDatosForm();
       this.$nextTick(() => this.$refs.lectorToogle.$el.focus());
     }
     loading(false);
   },
-  updated() {
+  async updated() {
     loading(false);
     if (this.status == 200) {
       this.mostrarModalExito = true;
-      this.llenarDatosForm();
+      await this.llenarDatosForm();
     } else if (this.status == 300) {
       notify(this.mensaje, 'error');
     }
@@ -183,7 +183,7 @@ export default {
     },
   },
   methods: {
-    llenarDatosForm() {
+    async llenarDatosForm() {
       this.impresorasOpciones = [];
       if (!isEmpty(this.impresoras)) {
         this.impresoras.forEach(impresora => this.impresorasOpciones.push({
@@ -194,7 +194,7 @@ export default {
       }
       const { lectura_modo_monitor, impresora_predeterminada, impresora_nombre } = this.usuarioConfiguracion;
       this.form = {
-        lecturaCompleta: lectura_modo_monitor ? true : false,
+        lecturaCompleta: Number(lectura_modo_monitor) == 1 ? true : false,
         // impresoraPredeterminada: impresora_predeterminada ? true: false,
         // impresoraNombre: impresora_nombre,
         impresoraPredeterminada: false,
