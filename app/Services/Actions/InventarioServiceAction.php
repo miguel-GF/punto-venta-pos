@@ -7,8 +7,6 @@ use App\Models\MovimientoInventario;
 use App\Models\Producto;
 use App\Utils;
 use Illuminate\Support\Facades\DB;
-use Exception;
-use Illuminate\Support\Facades\Log;
 
 class InventarioServiceAction
 {
