@@ -19,11 +19,11 @@ class ConfiguracionController extends Controller
 	{
 		$user = Utils::getUser();
     $usuarioConfiguracion = Usuario::find(Utils::getUserId());
-    $impresoras = HelperPrinter::obtenerListadoImpresoras();
+    // $impresoras = HelperPrinter::obtenerListadoImpresoras();
 		return Inertia::render('Configuraciones/ConfiguracionEditarUsuario', [
 			'usuario' => $user,
       'usuarioConfiguracion' => $usuarioConfiguracion,
-      'impresoras' => $impresoras,
+      'impresoras' => [],
 		]);
 	}
 
@@ -49,11 +49,11 @@ class ConfiguracionController extends Controller
 
 		$user = Utils::getUser();
     $usuarioConfiguracion = Usuario::find(Utils::getUserId());
-    $impresoras = HelperPrinter::obtenerListadoImpresoras();
+    // $impresoras = HelperPrinter::obtenerListadoImpresoras();
 		return Inertia::render('Configuraciones/ConfiguracionEditarUsuario', [
 			'usuario' => $user,
       'usuarioConfiguracion' => $usuarioConfiguracion,
-      'impresoras' => $impresoras,
+      'impresoras' => [],
       'status' => $status,
       'mensaje' => $mensaje,
 		]);

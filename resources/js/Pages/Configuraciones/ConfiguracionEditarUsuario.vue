@@ -51,52 +51,54 @@
                 </q-banner>
               </div>
             </div>
-            <div class="q-mb-md col-8">
-              <div class="text-h6 text-grey-9 text-left fs-italic">Impresora</div>
-              <q-separator />
-            </div>
-            <div class="q-mb-lg col-8">
-              <div class="q-mb-xs row">
-                <div class="q-pr-md">
-                  <label>Impresora Predeterminada</label>
+            <template v-if="true == false">
+              <div class="q-mb-md col-8">
+                <div class="text-h6 text-grey-9 text-left fs-italic">Impresora</div>
+                <q-separator />
+              </div>
+              <div class="q-mb-lg col-8">
+                <div class="q-mb-xs row">
+                  <div class="q-pr-md">
+                    <label>Impresora Predeterminada</label>
+                  </div>
+                  <div>
+                    <q-toggle
+                      :label="form.impresoraPredeterminada ?  'Si' : 'No'"
+                      v-model="form.impresoraPredeterminada"
+                      dense
+                      checked-icon="check"
+                      unchecked-icon="clear"
+                      ref="lectorToogle"
+                    />
+                  </div>
                 </div>
                 <div>
-                  <q-toggle
-                    :label="form.impresoraPredeterminada ?  'Si' : 'No'"
-                    v-model="form.impresoraPredeterminada"
+                  <q-banner dense :class="obtenerClassImpresora" class="rounded-borders q-pa-sm q-mb-md">
+                    <template v-slot:avatar>
+                      <div class="q-my-auto">
+                        <q-icon name="info" size="xs" />
+                      </div>
+                    </template>
+                    {{ mensajeImpresora || '--' }}
+                  </q-banner>
+                </div>
+                <div class="q-mb-lg">
+                  <q-select
+                    :options="impresorasOpciones"
+                    v-model="form.impresoraNombre"
                     dense
-                    checked-icon="check"
-                    unchecked-icon="clear"
-                    ref="lectorToogle"
-                  />
+                    outlined
+                    emit-value
+                    :disable="form.impresoraPredeterminada"
+                    :rules="[val => form.impresoraPredeterminada ? [] : validarSeleccionImpresora(val)]"
+                  >
+                    <template #selected v-if="!form.impresoraNombre">
+                      Selecciona una opción
+                    </template>
+                  </q-select>
                 </div>
               </div>
-              <div>
-                <q-banner dense :class="obtenerClassImpresora" class="rounded-borders q-pa-sm q-mb-md">
-                  <template v-slot:avatar>
-                    <div class="q-my-auto">
-                      <q-icon name="info" size="xs" />
-                    </div>
-                  </template>
-                  {{ mensajeImpresora || '--' }}
-                </q-banner>
-              </div>
-              <div class="q-mb-lg">
-                <q-select
-                  :options="impresorasOpciones"
-                  v-model="form.impresoraNombre"
-                  dense
-                  outlined
-                  emit-value
-                  :disable="form.impresoraPredeterminada"
-                  :rules="[val => form.impresoraPredeterminada ? [] : validarSeleccionImpresora(val)]"
-                >
-                  <template #selected v-if="!form.impresoraNombre">
-                    Selecciona una opción
-                  </template>
-                </q-select>
-              </div>
-            </div>
+            </template>
             <!-- BTN GUARDAR -->
             <div class="text-right col-8">
               <q-btn type="submit" icon-right="las la-save" color="primary" class="full-width">
@@ -193,8 +195,10 @@ export default {
       const { lectura_modo_monitor, impresora_predeterminada, impresora_nombre } = this.usuarioConfiguracion;
       this.form = {
         lecturaCompleta: lectura_modo_monitor ? true : false,
-        impresoraPredeterminada: impresora_predeterminada ? true: false,
-        impresoraNombre: impresora_nombre,
+        // impresoraPredeterminada: impresora_predeterminada ? true: false,
+        // impresoraNombre: impresora_nombre,
+        impresoraPredeterminada: false,
+        impresoraNombre: null,
       };
     },
     regresar() {
