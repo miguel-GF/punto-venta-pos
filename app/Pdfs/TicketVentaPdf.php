@@ -57,6 +57,10 @@ class TicketVentaPDF extends FPDF
     $this->SetY($headerHeight + 10);
     $fmt = new NumberFormatter('es_MX', NumberFormatter::CURRENCY);
     $this->SetFont('Arial', 'B', 9);
+    $this->Cell(0, 7, "FOLIO " . $ventaInfo->serie_folio, 0, 0, 'L');
+    $this->Ln(4);
+    $this->Cell(0, 7, "CLIENTE " .  utf8_decode($ventaInfo->nombre_comercial), 0, 0, 'L');
+    $this->Ln(9);
     $this->Cell(25, 7, 'PRODUCTO', 'B', 0, 'L');
     $this->Cell(25, 7, 'CANT', 'B', 0, 'R');
     $this->Cell(25, 7, 'PREC U.', 'B', 1, 'R');
