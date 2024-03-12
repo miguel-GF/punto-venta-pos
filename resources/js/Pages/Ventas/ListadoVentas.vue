@@ -50,6 +50,14 @@ export default {
           sortable: true
         },
         {
+          name: 'cliente',
+          label: 'cliente',
+          align: 'left',
+          field: row => row.nombre_comercial,
+          format: val => val ?? '--',
+          sortable: true
+        },
+        {
           name: 'total',
           label: 'Total Venta',
           align: 'right',

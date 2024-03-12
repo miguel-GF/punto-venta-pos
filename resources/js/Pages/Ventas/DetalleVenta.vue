@@ -19,22 +19,24 @@
               <tr>
                 <td>Folio</td>
                 <td>{{ venta.serie_folio || '--' }}</td>
+                <td>Cliente</td>
+                <td>
+                  {{ venta.nombre_comercial || '--' }}
+                </td>
+              </tr>
+              <tr>
+                <td># Productos</td>
+                <td>{{ formatear(venta.cantidad, 'number') }}</td>
                 <td>Fecha Registro</td>
                 <td>
                   {{ obtenerFecha(venta.registro_fecha) }}
                 </td>
               </tr>
               <tr>
-                <td># Productos</td>
-                <td>{{ formatear(venta.cantidad, 'number') }}</td>
-                <td>Autor</td>
-                <td>{{ venta.usuario_nombre || '--' }}</td>
-              </tr>
-              <tr>
                 <td>Total Venta</td>
                 <td>{{ formatear(venta.total, 'currency') }}</td>
-                <td></td>
-                <td></td>
+                <td>Autor</td>
+                <td>{{ venta.usuario_nombre || '--' }}</td>
               </tr>
             </tbody>
           </q-markup-table>

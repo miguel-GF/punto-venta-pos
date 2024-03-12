@@ -121,9 +121,11 @@ class VentaController extends Controller
 			$ventas = DB::table('ventas as  v')
         ->select(
           'v.*',
-          'u.nombre as usuario_nombre'
+          'u.nombre as usuario_nombre',
+          'c.nombre_comercial'
         )
         ->join('usuarios as u', 'u.usuario_id', 'v.registro_autor_id')
+        ->join('clientes as c', 'c.cliente_id', 'v.cliente_id')
 				->whereRaw("LOWER(v.status) = ?", [strtolower(Constants::ACTIVO_STATUS)])
 				->orderByDesc("v.folio")
 				->get()
