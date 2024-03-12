@@ -165,6 +165,14 @@ export default {
           sortable: true
         },
         {
+          name: 'folio',
+          label: 'folio',
+          align: 'center',
+          field: row => row.modulo_folio,
+          format: val => val ?? '--',
+          sortable: true
+        },
+        {
           name: 'fechaRegistro',
           label: 'Fecha Registro',
           align: 'center',
