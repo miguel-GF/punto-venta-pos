@@ -47,7 +47,6 @@ class VentaController extends Controller
 
 	public function agregar(VentaRequest $request)
 	{
-    $nombreArchivo = "";
 		try {
 			$datos = $request->all();
       $res = VentaServiceAction::agregar($datos);
@@ -70,7 +69,6 @@ class VentaController extends Controller
           break;
       }
 
-      $nombreArchivo = $res->nombre;
       return response([
         'mensaje' => $mensaje,
         'status' => $status,
@@ -82,11 +80,7 @@ class VentaController extends Controller
 				'mensaje' => 'Ocurrió un error al agregar una nueva venta',
 				'status' => 300
 			], 300);
-		} finally {
-      if (file_exists(public_path($nombreArchivo))) {
-        unlink(public_path($nombreArchivo));
-      }
-    }
+		}
 	}
 
   public function imprimirTicket($ventaId)
@@ -159,11 +153,7 @@ class VentaController extends Controller
 		} catch (Throwable $th) {
 			ExceptionHandler::manejarException($th);
 			throw $th;
-		} finally {
-      if (file_exists(public_path($res->nombre))) {
-        unlink(public_path($res->nombre));
-      }
-    }
+		}
 	}
 
   public function crearRegistroPdf($ventaId)
@@ -178,10 +168,6 @@ class VentaController extends Controller
 				'mensaje' => 'Ocurrió un al crear registro de ticket',
 				'status' => 300
 			], 300);
-		} finally {
-      if (file_exists(public_path($res->nombre))) {
-        unlink(public_path($res->nombre));
-      }
-    }
+		}
 	}
 }

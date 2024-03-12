@@ -55,15 +55,26 @@ class VentaServiceData
       ->where('venta_id', $ventaId)
       ->where('status', Constants::ACTIVO_STATUS)
       ->get()->first();
+
     $pdfContent = $ventaArchivoPdf->archivo;
-    $filePath = public_path($ventaArchivoPdf->nombre);
-    file_put_contents($filePath, $pdfContent);
-    $pdfArchivo = file_get_contents($filePath);
+    $fileName = $ventaArchivoPdf->nombre;
+
+    $tempDir = sys_get_temp_dir();
+    $tempFilePath = $tempDir . '/' . $fileName;
+    file_put_contents($tempFilePath, $pdfContent);
+
+     // Leer el archivo y codificarlo en base64
+    $pdfArchivo = file_get_contents($tempFilePath);
     $pdfBase64 = base64_encode($pdfArchivo);
 
     $res = new stdClass();
-    $res->nombre = $ventaArchivoPdf->nombre;
+    $res->nombre = $fileName;
     $res->base64 = $pdfBase64;
+
+    if (file_exists($tempFilePath)) {
+      unlink($tempFilePath);
+    }
+    
     return $res;
   }
 }

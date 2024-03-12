@@ -222,8 +222,11 @@ class VentaServiceAction
     $pdf->contenido($ventaObj);
 
     $archivo = strtoupper($ventaObj->info->serie_folio) . ".pdf";
-    $pdf->Output(public_path($archivo), 'F');
-    $pdfContent = file_get_contents(public_path($archivo));
+
+    $tempDir = sys_get_temp_dir();
+    $tempFilePath = $tempDir . '/' . $archivo;
+    $pdf->Output($tempFilePath, 'F');
+    $pdfContent = file_get_contents($tempFilePath);
 
     $pdfModel = new VentaArchivo();
     $pdfModel->venta_id = $ventaObj->info->venta_id;
@@ -232,5 +235,9 @@ class VentaServiceAction
     $pdfModel->extension = "pdf";
     $pdfModel->registro_fecha = $ventaObj->info->registro_fecha;
     $pdfModel->save();
+
+    if (file_exists($tempFilePath)) {
+      unlink($tempFilePath);
+    }
   }
 }
