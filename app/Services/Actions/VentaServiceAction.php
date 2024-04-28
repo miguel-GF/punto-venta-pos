@@ -55,6 +55,11 @@ class VentaServiceAction
         ProductoRepoAction::actualizarStock($datos, $producto);
 
         // Se agrega movimiento de inventario
+        $datosComentario = new stdClass();
+        $datosComentario->folio = $insert['serie_folio'];
+        $datosComentario->cantidad = $producto->cantidad * -1;
+        $datosComentario->nombre = $producto->nombre;
+        $datosComentario->clave = strtoupper($producto->clave);
         $movimientoInventario = new MovimientoInventario([
           'producto_id' => $producto->producto_id,
           'tipo' => Constants::SALIDA_MOVIMIENTO_INVENTARIO_TIPO,
@@ -62,6 +67,10 @@ class VentaServiceAction
           'registro_autor_id' => Utils::getUserId(),
           'registro_fecha' => $datos['fechaActual'],
           'venta_id' => $datos['ventaId'],
+          'comentario' => MovimientoInventario::ponerComentario(
+            Constants::VENTA_MOVIMIENTO_INVENTARIO_TIPO,
+            $datosComentario,
+          ),
         ]);
         $movimientoInventario->save();
       }

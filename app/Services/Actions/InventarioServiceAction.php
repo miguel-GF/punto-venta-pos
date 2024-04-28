@@ -7,6 +7,7 @@ use App\Models\MovimientoInventario;
 use App\Models\Producto;
 use App\Utils;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 class InventarioServiceAction
 {
@@ -37,12 +38,20 @@ class InventarioServiceAction
       }
 
       // Crear un nuevo objeto MovimientoInventario
+      $datosComentario = new stdClass();
+      $datosComentario->cantidad = $cantidad;
+      $datosComentario->nombre = $producto->nombre;
+      $datosComentario->clave = strtoupper($producto->clave);
       $movimientoInventario = new MovimientoInventario([
         'producto_id' => $producto->producto_id,
         'tipo' => $datos['tipoMovimiento'],
         'cantidad' => $cantidad,
         'registro_autor_id' => Utils::getUserId(),
         'registro_fecha' => $datos['fechaActual'],
+        'comentario' => MovimientoInventario::ponerComentario(
+          $datos['tipoMovimiento'],
+          $datosComentario,
+        ),
       ]);
 
       $movimientoInventario->save();

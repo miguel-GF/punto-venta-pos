@@ -120,7 +120,7 @@
                   <!-- EXISTENCIA -->
                   <div class="col-6 q-pl-sm">
                     <div class="q-mb-xs">
-                      <label>Existencia *</label>
+                      <label>Existencia Inicial*</label>
                     </div>
                     <div class="q-mb-xs">
                       <q-input
@@ -130,6 +130,7 @@
                         id="existencia"
                         dense
                         outlined
+                        :disable="producto.con_existencia_inicial == 1"
                         placeholder="Stock del producto"
                         :rules="[val => !!val || 'La existencia es obligatoria',]"
                       />

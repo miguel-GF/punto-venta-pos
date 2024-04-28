@@ -28,5 +28,6 @@ class Producto extends Model
     'actualizacion_autor_id',
     'marca',
     'familia',
+    'con_existencia_inicial',
   ];
 }

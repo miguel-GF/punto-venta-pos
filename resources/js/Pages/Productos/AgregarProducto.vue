@@ -120,7 +120,7 @@
                   <!-- EXISTENCIA -->
                   <div class="col-6 q-pl-sm">
                     <div class="q-mb-xs">
-                      <label>Existencia *</label>
+                      <label>Existencia Inicial*</label>
                     </div>
                     <div class="q-mb-xs">
                       <q-input
