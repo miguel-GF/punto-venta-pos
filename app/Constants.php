@@ -9,6 +9,7 @@ class Constants
   const BAJA_STATUS = "Baja";
   const INACTIVO_STATUS = "Inactivo";
 
+  const INICIAL_MOVIMIENTO_INVENTARIO_TIPO = "Inicial";
   const ENTRADA_MOVIMIENTO_INVENTARIO_TIPO = "Entrada";
   const SALIDA_MOVIMIENTO_INVENTARIO_TIPO = "Salida";
   const VENTA_MOVIMIENTO_INVENTARIO_TIPO = "Venta";
