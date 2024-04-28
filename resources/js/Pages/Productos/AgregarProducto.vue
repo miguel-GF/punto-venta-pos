@@ -20,40 +20,45 @@
           <q-form ref="form" @submit.prevent="guardar()">
             <input ref="inputSubmit" hidden type="submit">
             <div class="row col-12 justify-center full-height">
-              <!-- CLAVE -->
+              <!-- CLAVE Y CODIGO BARRAS -->
               <div class="q-mb-xs col-8">
-                <div class="q-mb-xs">
-                  <label>Clave *</label>
-                </div>
-                <div class="q-mb-xs">
-                  <q-input
-                    v-model.trim="form.clave"
-                    id="clave"
-                    ref="claveInput"
-                    dense
-                    outlined
-                    placeholder="Clave del producto"
-                    maxlength="15"
-                    :rules="[val => !!val || 'La clave es obligatoria',]"
-                    input-class="text-uppercase"
-                  />
-                </div>
-              </div>
-              <!-- CODIGO DE BARRAS -->
-              <div class="q-mb-xs col-8">
-                <div class="q-mb-xs">
-                  <label>Código de Barras *</label>
-                </div>
-                <div class="q-mb-xs">
-                  <q-input
-                    v-model.trim="form.codigoBarras"
-                    id="codigoBarras"
-                    dense
-                    outlined
-                    placeholder="Código de barras del producto"
-                    maxlength="30"
-                    :rules="[val => !!val || 'El código de barras es obligatorio',]"
-                  />
+                <div class="row col-12">
+                  <!-- CLAVE -->
+                  <div class="col-6 q-pr-sm">
+                    <div class="q-mb-xs">
+                      <label>Clave *</label>
+                    </div>
+                    <div class="q-mb-xs">
+                      <q-input
+                        v-model.trim="form.clave"
+                        id="clave"
+                        ref="claveInput"
+                        dense
+                        outlined
+                        placeholder="Clave del producto"
+                        maxlength="15"
+                        :rules="[val => !!val || 'La clave es obligatoria',]"
+                        input-class="text-uppercase"
+                      />
+                    </div>
+                  </div>
+                  <!-- CODIGO BARRAS -->
+                  <div class="col-6 q-pl-sm">
+                    <div class="q-mb-xs">
+                      <label>Código de Barras *</label>
+                    </div>
+                    <div class="q-mb-xs">
+                      <q-input
+                        v-model.trim="form.codigoBarras"
+                        id="codigoBarras"
+                        dense
+                        outlined
+                        placeholder="Código de barras del producto"
+                        maxlength="30"
+                        :rules="[val => !!val || 'El código de barras es obligatorio',]"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
               <!-- NOMBRE -->
@@ -132,6 +137,49 @@
                   </div>
                 </div>
               </div>
+              <!-- MARCA Y FAMILIA -->
+              <div class="q-mb-xs col-8">
+                <div class="row col-12">
+                  <!-- marca -->
+                  <div class="col-6 q-pr-sm">
+                    <div class="q-mb-xs">
+                      <label>Marca</label>
+                    </div>
+                    <div class="q-mb-lg">
+                      <q-input
+                        v-model="form.marca"
+                        type="text"
+                        step="any"
+                        id="marca"
+                        dense
+                        outlined
+                        placeholder="Marca del producto"
+                        maxlength="25"
+                      />
+                      <!-- :rules="[val => !!val || 'La marca es obligatoria',]" -->
+                    </div>
+                  </div>
+                  <!-- FAMILIA -->
+                  <div class="col-6 q-pl-sm">
+                    <div class="q-mb-xs">
+                      <label>Familia</label>
+                    </div>
+                    <div class="q-mb-lg">
+                      <q-input
+                        v-model="form.familia"
+                        type="text"
+                        step="any"
+                        id="familia"
+                        dense
+                        outlined
+                        placeholder="Familia del producto"
+                        maxlength="40"
+                      />
+                      <!-- :rules="[val => !!val || 'La familia es obligatoria',]" -->
+                    </div>
+                  </div>
+                </div>
+              </div>
               <!-- BTN GUARDAR -->
               <div class="text-right col-8">
                 <q-btn type="submit" icon-right="las la-save" color="primary" class="full-width">
@@ -171,6 +219,8 @@ export default {
         descripcion: "",
         precio: "",
         existencia: 0,
+        marca: "",
+        familia: "",
       },
       mostrarModalExito: false,
       mensajeConfirmacion: "",
@@ -208,7 +258,9 @@ export default {
         nombre: "",
         descripcion: "",
         precio: "",
-        existencia: "",
+        existencia: 0,
+        marca: "",
+        familia: "",
       };
       this.$nextTick(() => {
         this.$refs.claveInput.focus();

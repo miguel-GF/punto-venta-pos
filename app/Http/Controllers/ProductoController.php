@@ -66,6 +66,8 @@ class ProductoController extends Controller
 			'precio' => 'required|numeric',
 			'existencia' => 'required|numeric',
 			'fechaActual' => 'required',
+			'marca' => 'nullable',
+			'familia' => 'nullable',
 		]);
 
 		$datos = $request->all();
@@ -98,6 +100,8 @@ class ProductoController extends Controller
 			'precio' => 'required|numeric',
 			'existencia' => 'required|numeric',
 			'fechaActual' => 'required',
+      'marca' => 'nullable',
+			'familia' => 'nullable',
 		]);
 
 		$datos = $request->all();

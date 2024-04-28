@@ -23,6 +23,8 @@ class InventarioRepoData
         'p.clave',
         'p.codigo_barras',
         'p.nombre',
+        'p.marca',
+        'p.familia',
         DB::raw("
           CASE
             WHEN mi.venta_id IS NOT NULL THEN v.serie_folio ELSE '--'

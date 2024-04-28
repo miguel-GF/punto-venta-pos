@@ -149,6 +149,22 @@ export default {
           sortable: true
         },
         {
+          name: 'marca',
+          label: 'Marca',
+          align: 'left',
+          field: row => row.marca,
+          format: val => val ?? '--',
+          sortable: true
+        },
+        {
+          name: 'familia',
+          label: 'Familia',
+          align: 'left',
+          field: row => row.familia,
+          format: val => val ?? '--',
+          sortable: true
+        },
+        {
           name: 'tipo',
           label: 'Tipo',
           align: 'left',

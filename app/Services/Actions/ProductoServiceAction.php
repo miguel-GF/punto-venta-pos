@@ -36,6 +36,8 @@ class ProductoServiceAction
         'existencia' => $datos['existencia'],
         'registro_autor_id' => Utils::getUserId(),
         'registro_fecha' => $datos['fechaActual'],
+        'marca' => $datos['marca'] ?? null,
+        'familia' => $datos['familia'] ?? null,
       ]);
 
       $producto->save();
@@ -78,6 +80,8 @@ class ProductoServiceAction
       $producto->existencia = $datos['existencia'];
       $producto->actualizacion_autor_id = Utils::getUserId();
       $producto->actualizacion_fecha = $datos['fechaActual'];
+      $producto->marca = $datos['marca'] ?? null;
+      $producto->familia = $datos['familia'] ?? null;
 
       $producto->save();
 

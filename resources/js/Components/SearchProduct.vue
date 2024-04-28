@@ -63,6 +63,22 @@
                   </div>
                 </td>
               </tr>
+              <tr>
+                <td class="w10p text-right text-weight-bold">Marca</td>
+                <td class="w90p text-left" colspan="3">
+                  <div class="break-words-3-lines">
+                    {{ productoObj?.marca || '--' }}
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="w10p text-right text-weight-bold">Familia</td>
+                <td class="w90p text-left" colspan="3">
+                  <div class="break-words-3-lines">
+                    {{ productoObj?.familia || '--' }}
+                  </div>
+                </td>
+              </tr>
             </tbody>
           </q-markup-table>
         </div>

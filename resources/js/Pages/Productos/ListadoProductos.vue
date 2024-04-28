@@ -109,6 +109,24 @@ export default {
           headerClasses: "w250"
         },
         {
+          name: 'marca',
+          label: 'Marca',
+          align: 'left',
+          field: row => row.marca,
+          format: val => val || '--',
+          sortable: true,
+          headerClasses: "w130"
+        },
+        {
+          name: 'familia',
+          label: 'Familia',
+          align: 'left',
+          field: row => row.familia,
+          format: val => val || '--',
+          sortable: true,
+          headerClasses: "w130"
+        },
+        {
           name: 'precio',
           label: 'Precio',
           align: 'right',
