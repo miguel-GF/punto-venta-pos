@@ -5,11 +5,14 @@
         <div class="row col-12 justify-between q-mb-md">
           <div class="text-h6">Detalle de Venta - {{ venta.serie_folio || '--' }}</div>
           <div class="q-my-auto">
-            <q-btn @click="regresar()" dense icon="chevron_left" color="secondary" class="q-mr-md">
+            <!-- <q-btn @click="regresar()" dense icon="chevron_left" color="secondary" class="q-mr-md">
               <div class="q-px-sm">Regresar</div>
+            </q-btn> -->
+            <q-btn @click="verTicket()" dense icon-right="las la-search" color="info" class="q-mr-md">
+              <div class="q-px-sm">Ver Ticket</div>
             </q-btn>
             <q-btn @click="imprimirTicket()" dense icon-right="las la-receipt" color="info">
-              <div class="q-px-sm">Ver Ticket</div>
+              <div class="q-px-sm">Imprimir</div>
             </q-btn>
           </div>
         </div>
@@ -165,8 +168,12 @@ export default {
     //     notify(error, 'error');
     //   }
     // },
-    imprimirTicket() {
+    verTicket() {
       this.mostrarTicket = true;
+    },
+    imprimirTicket() {
+      const fullBase64 = this.base64;
+      printJS({ printable: fullBase64, type: 'pdf', base64: true });
     }
   }
 };
